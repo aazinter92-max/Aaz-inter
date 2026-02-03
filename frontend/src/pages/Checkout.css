@@ -1,0 +1,397 @@
+/* Checkout Page */
+.checkout-page {
+  padding: var(--spacing-3xl) 0;
+  min-height: 70vh;
+}
+
+.checkout-title {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--spacing-2xl);
+}
+
+/* Checkout Layout */
+.checkout-layout {
+  display: grid;
+  grid-template-columns: 1fr 400px;
+  gap: var(--spacing-2xl);
+  align-items: start;
+}
+
+/* Form Section */
+.checkout-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.form-section {
+  background-color: var(--color-white);
+}
+
+.form-section-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin: 0 0 var(--spacing-lg);
+  padding-bottom: var(--spacing-md);
+  border-bottom: 2px solid var(--color-primary-light);
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+}
+
+.form-grid-full {
+  grid-column: 1 / -1;
+}
+
+/* Payment Methods */
+.payment-methods {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.payment-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  border: 2px solid var(--color-gray-300);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+}
+
+.payment-option input[type='radio'] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.payment-option:hover {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+}
+
+.payment-option-active {
+  border-color: var(--color-primary);
+  background-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(10, 116, 218, 0.1);
+}
+
+.payment-option svg {
+  color: var(--color-gray-700);
+}
+
+.payment-option-active svg {
+  color: var(--color-primary);
+}
+
+.payment-option span {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+}
+
+.payment-option-active span {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Payment Option Content */
+.payment-option-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* Accepted Cards */
+.accepted-cards {
+  display: flex;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+}
+
+.card-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 20px;
+  font-size: 8px;
+  font-weight: var(--font-weight-bold);
+  border-radius: 3px;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0,0,0,0.3);
+}
+
+.card-logo.visa {
+  background: linear-gradient(135deg, #1a1f71 0%, #0f3460 100%);
+}
+
+.card-logo.mastercard {
+  background: linear-gradient(135deg, #eb001b 0%, #f79e1b 100%);
+}
+
+.card-logo.unionpay {
+  background: linear-gradient(135deg, #005baa 0%, #003d7a 100%);
+}
+
+.card-logo.jazzcash {
+  background: linear-gradient(135deg, #ff6b35 0%, #e55100 100%);
+}
+
+.card-logo.easypaisa {
+  background: linear-gradient(135deg, #00c853 0%, #00a043 100%);
+}
+
+/* Card Details Section */
+.card-details-section {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+/* Bank Transfer Info */
+.bank-transfer-info {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.bank-transfer-info .info-box {
+  background-color: var(--color-blue-50, #eff6ff);
+  border: 1px solid var(--color-blue-200, #bfdbfe);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-lg);
+}
+
+.bank-transfer-info .info-box h4 {
+  color: var(--color-primary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  margin: 0 0 var(--spacing-sm);
+}
+
+.bank-transfer-info .info-box p {
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+  margin: 0 0 var(--spacing-sm);
+  line-height: 1.5;
+}
+
+.bank-transfer-info .info-box ol {
+  margin: var(--spacing-sm) 0 0;
+  padding-left: var(--spacing-lg);
+  color: var(--color-gray-700);
+  font-size: var(--font-size-sm);
+  line-height: 1.6;
+}
+
+.bank-transfer-info .info-box ol li {
+  margin-bottom: var(--spacing-xs);
+}
+
+/* Stripe Payment Section */
+.stripe-checkout-section {
+  margin-top: var(--spacing-xl);
+}
+
+.card-input-container {
+  padding: var(--spacing-xl);
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-gray-200);
+}
+
+.stripe-elements-grid {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.element-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.element-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-600);
+}
+
+.stripe-element-wrapper {
+  padding: var(--spacing-md);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.stripe-element-wrapper:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(10, 116, 218, 0.1);
+}
+
+.elements-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+}
+
+.payment-error-msg {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  margin-top: var(--spacing-md);
+}
+
+.payment-security-tip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  color: var(--color-gray-500);
+  font-size: var(--font-size-xs);
+  margin-top: var(--spacing-lg);
+}
+
+.security-icon {
+  color: var(--color-success);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .elements-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Checkout Summary */
+.checkout-summary-wrapper {
+  position: sticky;
+  top: calc(var(--spacing-3xl) + 80px);
+}
+
+.checkout-summary {
+  background-color: var(--color-gray-50);
+}
+
+.summary-title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  margin: 0 0 var(--spacing-lg);
+}
+
+.summary-items {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+}
+
+.summary-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.summary-item-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-900);
+  line-height: 1.3;
+}
+
+.summary-item-qty {
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-500);
+}
+
+.summary-item-price {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-700);
+}
+
+.summary-divider {
+  height: 1px;
+  background-color: var(--color-gray-300);
+  margin: var(--spacing-lg) 0;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.summary-total-value {
+  font-size: var(--font-size-2xl);
+  color: var(--color-primary);
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+  .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-summary-wrapper {
+    position: static;
+    order: -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .checkout-page {
+    padding: var(--spacing-xl) 0;
+  }
+
+  .checkout-title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .payment-methods {
+    grid-template-columns: 1fr;
+  }
+}

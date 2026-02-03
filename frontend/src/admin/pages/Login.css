@@ -1,0 +1,252 @@
+/* ========================================
+   ADMIN LOGIN - ENTERPRISE PREMIUM
+   Healthcare & Procurement Administration
+   ======================================== */
+
+:root {
+  --admin-blue: #1e40af; /* Deep Enterprise Blue */
+  --admin-blue-hover: #1e3a8a;
+  --admin-bg: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%);
+  --admin-text-main: #0f172a;
+  --admin-text-muted: #64748b;
+  --admin-card-bg: #ffffff;
+  --admin-border: #e2e8f0;
+  --admin-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
+}
+
+.admin-login-wrapper {
+  min-height: 100vh;
+  background: var(--admin-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle background accent */
+.admin-login-wrapper::after {
+  content: '';
+  position: absolute;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(30, 64, 175, 0.03) 0%, transparent 70%);
+  top: -200px;
+  right: -200px;
+  z-index: 0;
+}
+
+.admin-login-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+/* --- Premium Admin Card --- */
+.admin-login-card {
+  background: var(--admin-card-bg);
+  padding: 56px 48px;
+  border-radius: 16px;
+  box-shadow: var(--admin-shadow);
+  border: 1px solid var(--admin-border);
+  transition: transform 0.3s ease;
+}
+
+/* Brand Badge inside Card */
+.card-top-branding {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 40px;
+}
+
+.admin-logo-badge {
+  width: 52px;
+  height: 52px;
+  background: var(--admin-blue-light, #eff6ff);
+  color: var(--admin-blue);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(30, 64, 175, 0.1);
+}
+
+.admin-brand-name {
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--admin-text-main);
+  opacity: 0.8;
+}
+
+/* Header Text */
+.card-header-section {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.card-header-section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--admin-text-main);
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.card-subtitle {
+  font-size: 0.875rem;
+  color: var(--admin-text-muted);
+  font-weight: 500;
+}
+
+/* --- Form Components --- */
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.admin-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-field-group label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.admin-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--admin-text-muted);
+  transition: color 0.2s;
+}
+
+.admin-input-wrapper input {
+  width: 100%;
+  padding: 14px 14px 14px 44px;
+  background: #f8fafc;
+  border: 1.5px solid var(--admin-border);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: var(--admin-text-main);
+  transition: all 0.2s ease;
+}
+
+.admin-input-wrapper input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--admin-blue);
+  box-shadow: 0 0 0 4px rgba(30, 64, 175, 0.06);
+}
+
+.admin-input-wrapper input:focus + .admin-input-icon {
+  color: var(--admin-blue);
+}
+
+/* --- Submit Button --- */
+.admin-submit-btn {
+  background: var(--admin-blue);
+  color: white;
+  border: none;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 8px;
+}
+
+.admin-submit-btn:hover:not(:disabled) {
+  background: var(--admin-blue-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 15px -3px rgba(30, 64, 175, 0.3);
+}
+
+.admin-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Trust Micro-indicator */
+.admin-trust-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+  margin-top: 16px;
+  font-weight: 500;
+}
+
+/* Error Feedback */
+.admin-login-error {
+  background: #fef2f2;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  border: 1px solid #fee2e2;
+  animation: shake 0.4s ease;
+}
+
+/* --- Footer Area --- */
+.admin-login-footer {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-login-footer p {
+  font-size: 0.75rem;
+  color: var(--admin-text-muted);
+  font-weight: 500;
+}
+
+.admin-login-footer .legal-text {
+  opacity: 0.6;
+}
+
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .admin-login-card {
+    padding: 40px 24px;
+    border-radius: 0;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+  }
+}

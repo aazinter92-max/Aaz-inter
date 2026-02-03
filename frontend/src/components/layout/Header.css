@@ -1,0 +1,572 @@
+/* ========================================
+   MODERN MEDICAL NAVBAR - 2024 STYLE
+   Clean, Professional, Glassmorphism
+   ======================================== */
+
+/* Header Container */
+.header-modern {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-index-sticky);
+  background-color: var(--color-white);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Main Navigation Bar */
+.header-nav-main {
+  background-color: var(--color-white);
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.nav-main-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 48px;
+}
+
+/* Modern Logo */
+.logo-modern {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  transition: transform 0.3s ease;
+}
+
+.logo-modern:hover {
+  transform: scale(1.02);
+}
+
+.logo-icon-modern {
+  width: 56px;
+  height: 56px;
+  background: linear-gradient(135deg, #00BCD4 0%, #26C6DA 100%);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 14px rgba(0, 188, 212, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.logo-icon-modern::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+  transform: rotate(45deg);
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.logo-icon-modern span {
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--color-white);
+  letter-spacing: -1px;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-text-modern h1 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-gray-900);
+  margin: 0;
+  line-height: 1.2;
+  letter-spacing: -0.5px;
+}
+
+.logo-text-modern p {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin: 0;
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Navigation Links - Modern Pills with Dropdowns */
+.nav-links-modern {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-item-wrapper {
+  position: relative;
+}
+
+.nav-link-modern {
+  position: relative;
+  padding: 10px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link-dropdown {
+  background: none;
+}
+
+.dropdown-icon {
+  transition: transform 0.3s ease;
+}
+
+.nav-item-wrapper:hover .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.nav-link-modern::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  border-radius: 12px;
+}
+
+.nav-link-modern span {
+  position: relative;
+  z-index: 1;
+}
+
+.nav-link-modern:hover::before {
+  opacity: 0.1;
+}
+
+.nav-link-modern:hover {
+  color: var(--color-primary);
+  transform: translateY(-2px);
+}
+
+.nav-link-active-modern {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: var(--color-white) !important;
+  box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+}
+
+.nav-link-active-modern::before {
+  opacity: 0;
+}
+
+/* Dropdown Menu - Professional Medical Style */
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 8px;
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 8px;
+  min-width: 220px;
+  z-index: var(--z-index-dropdown);
+  animation: dropdownFadeIn 0.2s ease;
+  border: 1px solid var(--color-gray-200);
+}
+
+@keyframes dropdownFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 16px;
+  color: var(--color-gray-700);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+/* User Profile Button & Menu */
+.user-menu-wrapper {
+  position: relative;
+}
+
+.user-btn-modern,
+.login-btn-modern {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background-color: var(--color-white);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  color: var(--color-gray-700);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.user-btn-modern:hover,
+.login-btn-modern:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background-color: var(--color-primary-bg);
+}
+
+.user-dropdown-icon {
+  transition: transform 0.3s ease;
+}
+
+.user-dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+.user-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 8px;
+  min-width: 200px;
+  z-index: var(--z-index-dropdown);
+  animation: dropdownFadeIn 0.2s ease;
+  border: 1px solid var(--color-gray-200);
+}
+
+.user-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  color: var(--color-gray-700);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.user-dropdown-item:hover {
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+/* Cart Button - Modern */
+.nav-actions-modern {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.cart-btn-modern {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 188, 212, 0.15);
+}
+
+.cart-btn-modern:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.25);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: var(--color-white);
+}
+
+.cart-badge-modern {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 22px;
+  height: 22px;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF5252 100%);
+  color: var(--color-white);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 11px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 6px;
+  box-shadow: 0 2px 8px rgba(255, 82, 82, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Mobile Toggle */
+.mobile-toggle-modern {
+  display: none;
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-gray-50);
+  border: none;
+  border-radius: 12px;
+  color: var(--color-gray-700);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.mobile-toggle-modern:hover {
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
+}
+
+/* Mobile Menu - Slide-in Drawer */
+.mobile-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.mobile-menu-modern {
+  display: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 320px;
+  max-width: 90%;
+  background-color: var(--color-white);
+  z-index: 1000;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.mobile-menu-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+}
+
+.mobile-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid var(--color-gray-100);
+}
+
+.mobile-menu-header h3 {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-gray-900);
+  margin: 0;
+}
+
+.mobile-menu-header button {
+  width: 40px;
+  height: 40px;
+  background-color: var(--color-gray-50);
+  border: none;
+  border-radius: 10px;
+  color: var(--color-gray-700);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-nav-modern {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.mobile-nav-item {
+  width: 100%;
+}
+
+.mobile-nav-link-modern {
+  display: block;
+  padding: 14px 20px;
+  color: var(--color-gray-700);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 15px;
+}
+
+.mobile-dropdown-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mobile-dropdown-icon {
+  transition: transform 0.3s ease;
+}
+
+.mobile-dropdown-icon.open {
+  transform: rotate(180deg);
+}
+
+.mobile-nav-link-modern:hover {
+  background-color: var(--color-primary-bg);
+  color: var(--color-primary);
+  transform: translateX(4px);
+}
+
+.mobile-nav-active {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+  color: var(--color-white) !important;
+}
+
+.mobile-dropdown-menu {
+  padding-left: 16px;
+  margin-top: 4px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.mobile-dropdown-item {
+  display: block;
+  padding: 10px 16px;
+  color: var(--color-gray-600);
+  text-decoration: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-bottom: 2px;
+}
+
+.mobile-dropdown-item:hover {
+  background-color: var(--color-gray-100);
+  color: var(--color-primary);
+  padding-left: 20px;
+}
+
+.mobile-whatsapp-btn {
+  margin-top: auto;
+  padding: 16px;
+  background: linear-gradient(135deg, var(--color-secondary) 0%, #66BB6A 100%);
+  color: var(--color-white);
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nav-links-modern {
+    display: none;
+  }
+
+  .mobile-toggle-modern {
+    display: flex;
+  }
+
+  .mobile-overlay,
+  .mobile-menu-modern {
+    display: block;
+  }
+
+  .logo-text-modern {
+    display: none;
+  }
+
+  .nav-main-content {
+    gap: 16px;
+  }
+
+  .header-nav-main {
+    padding: 12px 0;
+  }
+}

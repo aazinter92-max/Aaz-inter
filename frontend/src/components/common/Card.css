@@ -1,0 +1,42 @@
+/* ========================================
+   CARD COMPONENT - COMPACT PROFESSIONAL
+   Smaller Padding, Cleaner Look
+   ======================================== */
+
+/* Card Base Styles - More Compact */
+.card {
+  background-color: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all var(--transition-base);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: visible;
+}
+
+.card-hover:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+}
+
+.card-clickable {
+  cursor: pointer;
+}
+
+/* Card Padding Variants - Reduced Sizes */
+.card-padding-small {
+  padding: 12px;
+}
+
+.card-padding-medium {
+  padding: 16px;
+}
+
+.card-padding-large {
+  padding: 20px;
+}
+
+.card-padding-none {
+  padding: 0;
+}
