@@ -9,6 +9,7 @@ import {
   X,
 } from "lucide-react";
 import "../styles/PaymentVerification.css";
+import { api } from '../../config/api';
 
 const PaymentVerification = () => {
   const [pendingPayments, setPendingPayments] = useState([]);
@@ -37,7 +38,7 @@ const PaymentVerification = () => {
       console.log("🔍 Fetching pending payments...");
       console.log("📋 Admin Token:", token ? "✓ Present" : "✗ Missing");
       const response = await fetch(
-        "http://localhost:5000/api/payments/pending",
+        api("http://localhost:5000/api/payments/pending".Replace("http://localhost:5000", "")),
         {
           method: "GET",
           headers: {
@@ -71,7 +72,7 @@ const PaymentVerification = () => {
       const token = localStorage.getItem("adminToken");
 
       const response = await fetch(
-        "http://localhost:5000/api/payments/approve",
+        api("http://localhost:5000/api/payments/approve".Replace("http://localhost:5000", "")),
         {
           method: "POST",
           headers: {
@@ -107,7 +108,7 @@ const PaymentVerification = () => {
       const token = localStorage.getItem("adminToken");
 
       const response = await fetch(
-        "http://localhost:5000/api/payments/reject",
+        api("http://localhost:5000/api/payments/reject".Replace("http://localhost:5000", "")),
         {
           method: "POST",
           headers: {

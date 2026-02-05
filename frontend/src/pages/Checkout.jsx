@@ -18,6 +18,7 @@ import {
   Upload,
 } from "lucide-react";
 import "./Checkout.css";
+import { api } from '../../../../../../../../config/api';
 
 const CheckoutContent = () => {
   const navigate = useNavigate();
@@ -51,7 +52,7 @@ const CheckoutContent = () => {
     const fetchBankDetails = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/api/payments/bank-details",
+          api("http://localhost:5000/api/payments/bank-details".Replace("http://localhost:5000", "")),
         );
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -160,7 +161,7 @@ const CheckoutContent = () => {
         })),
       };
 
-      const orderResponse = await fetch("http://localhost:5000/api/orders", {
+      const orderResponse = await fetch(api("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -187,7 +188,7 @@ const CheckoutContent = () => {
         formData.append('transactionId', transactionId);
 
         try {
-          const uploadResponse = await fetch(`http://localhost:5000/api/payments/upload-proof`, {
+          const uploadResponse = await fetch(api(`/api/payments/upload-proof`, {
             method: 'POST',
             body: formData
             // Do NOT set Content-Type header when using FormData, browser sets it with boundary

@@ -21,6 +21,7 @@ import { sendWhatsAppMessage, whatsappMessages } from '../utils/helpers';
 import Button from '../components/common/Button';
 import ProductCard from '../components/product/ProductCard';
 import './ProductDetail.css';
+import { api } from '../../../../../../../../config/api';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -48,7 +49,7 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/products/${id}`);
+        const res = await fetch(api(`/api/products/${id}`);
         if (!res.ok) throw new Error('Product not found');
         const data = await res.json();
         setProduct(data);
@@ -56,7 +57,7 @@ const ProductDetail = () => {
         // Fetch related products (all products, then filter)
         // Optimization: Create /api/products?category=ID endpoint technically better, 
         // but filtering clientside is okay for now.
-        const allRes = await fetch('http://localhost:5000/api/products');
+        const allRes = await fetch(api('/api/products');
         const allData = await allRes.json();
         const related = allData
           .filter(p => p.category?._id === data.category?._id && p._id !== data._id)
@@ -85,7 +86,7 @@ const ProductDetail = () => {
 
   const fetchReviews = async (productId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/reviews/${productId}`);
+      const res = await fetch(api(`/api/reviews/${productId}`);
       const data = await res.json();
       setReviews(data);
     } catch (err) {
@@ -95,7 +96,7 @@ const ProductDetail = () => {
 
   const fetchReviewStats = async (productId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/reviews/${productId}/stats`);
+      const res = await fetch(api(`/api/reviews/${productId}/stats`);
       const data = await res.json();
       setReviewStats(data);
     } catch (err) {
@@ -105,7 +106,7 @@ const ProductDetail = () => {
 
   const checkWishlistStatus = async (productId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/wishlist/check/${productId}`, {
+      const res = await fetch(api(`/api/wishlist/check/${productId}`, {
         headers: { 'Authorization': `Bearer ${user.token}` }
       });
       const data = await res.json();
@@ -124,13 +125,13 @@ const ProductDetail = () => {
     setWishlistLoading(true);
     try {
       if (isInWishlist) {
-        await fetch(`http://localhost:5000/api/wishlist/${product._id}`, {
+        await fetch(api(`/api/wishlist/${product._id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${user.token}` }
         });
         setIsInWishlist(false);
       } else {
-        await fetch('http://localhost:5000/api/wishlist', {
+        await fetch(api('/api/wishlist', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -172,7 +173,7 @@ const ProductDetail = () => {
 
     setSubmittingReview(true);
     try {
-      const res = await fetch('http://localhost:5000/api/reviews', {
+      const res = await fetch(api('/api/reviews', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

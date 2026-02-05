@@ -8,6 +8,7 @@ import Card from '../components/common/Card';
 import { formatPrice } from '../data/products';
 import { formatDate } from '../utils/helpers';
 import './MyOrders.css';
+import { api } from '../../../../../../../../config/api';
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -55,7 +56,7 @@ const MyOrders = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/orders/myorders', {
+      const response = await fetch(api('/api/orders/myorders', {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },

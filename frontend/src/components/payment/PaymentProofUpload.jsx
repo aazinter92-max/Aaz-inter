@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Upload, AlertCircle, CheckCircle, Loader } from "lucide-react";
 import "./PaymentProofUpload.css";
+import { api } from '../../config/api';
 
 const PaymentProofUpload = ({ orderId, onUploadSuccess }) => {
   const [transactionId, setTransactionId] = useState("");
@@ -59,7 +60,7 @@ const PaymentProofUpload = ({ orderId, onUploadSuccess }) => {
       console.log("File:", screenshot.name, screenshot.size, screenshot.type);
 
       const response = await fetch(
-        "http://localhost:5000/api/payments/upload-proof",
+        api("http://localhost:5000/api/payments/upload-proof".Replace("http://localhost:5000", "")),
         {
           method: "POST",
           body: formData,
@@ -199,6 +200,7 @@ const PaymentProofUpload = ({ orderId, onUploadSuccess }) => {
       </form>
     </div>
   );
+import { api } from '../../config/api';
 };
 
 export default PaymentProofUpload;

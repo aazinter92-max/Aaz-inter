@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Tag } from 'lucide-react';
+import { api } from '../../../../../../../../../config/api';
 
 const Categories = () => {
   const [categories, setCategories] = useState([]);
@@ -13,7 +14,7 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/categories');
+      const res = await fetch(api('/api/categories');
       const data = await res.json();
       setCategories(data);
     } catch (error) {
@@ -27,7 +28,7 @@ const Categories = () => {
     const token = localStorage.getItem('adminToken');
     const url = editingId 
       ? `http://localhost:5000/api/categories/${editingId}`
-      : 'http://localhost:5000/api/categories';
+      : api('http://localhost:5000/api/categories'.Replace('http://localhost:5000', ''));
     const method = editingId ? 'PUT' : 'POST';
 
     try {
@@ -60,7 +61,7 @@ const Categories = () => {
     if (!window.confirm('Delete this category?')) return;
     const token = localStorage.getItem('adminToken');
     try {
-      await fetch(`http://localhost:5000/api/categories/${id}`, {
+      await fetch(api(`/api/categories/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

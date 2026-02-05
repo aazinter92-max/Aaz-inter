@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Upload, X, DollarSign, Archive, Tag } from 'lucide-react';
+import { api } from '../../../../../../../../../../config/api';
 
 const ProductForm = () => {
   const { id } = useParams();
@@ -29,7 +30,7 @@ const ProductForm = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/categories');
+      const response = await fetch(api('/api/categories');
       const data = await response.json();
       if (Array.isArray(data)) {
         setCategories(data);
@@ -45,7 +46,7 @@ const ProductForm = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${id}`);
+      const response = await fetch(api(`/api/products/${id}`);
       if (!response.ok) {
          setError('Product not found');
          return;
@@ -86,7 +87,7 @@ const ProductForm = () => {
         return;
       }
 
-      const res = await fetch('http://localhost:5000/api/upload', {
+      const res = await fetch(api('/api/upload', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`
@@ -123,7 +124,7 @@ const ProductForm = () => {
       const token = localStorage.getItem('adminToken');
       const url = isEditMode 
         ? `http://localhost:5000/api/products/${id}` 
-        : 'http://localhost:5000/api/products';
+        : api('http://localhost:5000/api/products'.Replace('http://localhost:5000', ''));
       
       const method = isEditMode ? 'PUT' : 'POST';
 

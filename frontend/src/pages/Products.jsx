@@ -4,6 +4,7 @@ import { Filter } from 'lucide-react';
 import ProductCard from '../components/product/ProductCard';
 import Button from '../components/common/Button';
 import './Products.css';
+import { api } from '../../../../../../../../config/api';
 
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,8 +29,8 @@ const Products = () => {
     const fetchData = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
-          fetch('http://localhost:5000/api/products'),
-          fetch('http://localhost:5000/api/categories')
+          fetch(api('/api/products'),
+          fetch(api('/api/categories')
         ]);
         
         const productsData = await productsRes.json();

@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import useInactivityLogout from '../hooks/useInactivityLogout';
+import { api } from '../config/api';
 
 const AuthContext = createContext();
 
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }) => {
         const parsedUser = JSON.parse(storedUser);
          // Verify token validity
         try {
-          const res = await fetch('http://localhost:5000/api/auth/me', {
+          const res = await fetch(api('/api/auth/me'), {
             headers: { Authorization: `Bearer ${parsedUser.token}` }
           });
           if (res.ok) {
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
+      const response = await fetch(api('/api/auth/login'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
@@ -71,7 +72,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (name, email, password) => {
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
+      const response = await fetch(api('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, email, password }),

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Eye } from 'lucide-react';
 import { useSocket } from '../../../context/SocketContext';
+import { api } from '../../../../../../../../../../config/api';
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -38,7 +39,7 @@ const OrderList = () => {
         return;
       }
 
-      const response = await fetch('http://localhost:5000/api/orders', {
+      const response = await fetch(api('/api/orders', {
         headers: { Authorization: `Bearer ${token}` },
       });
 
