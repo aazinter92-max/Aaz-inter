@@ -5,9 +5,8 @@ import { useCart } from '../context/CartContext';
 import { useSocket } from '../context/SocketContext';
 import { User, Mail, LogOut, Save, Package, ShoppingCart, ArrowRight, Building, Phone, MapPin, CreditCard } from 'lucide-react';
 import Button from '../components/common/Button';
-import './Profile.css';
 import { api } from '../config/api';
-
+import './Profile.css';
 const Profile = () => {
   const navigate = useNavigate();
   const { user, logout, updateProfile } = useAuth();

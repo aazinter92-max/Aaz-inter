@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { api } from '../../config/api';
 import {
   AlertCircle,
   CheckCircle,
@@ -9,8 +10,6 @@ import {
   X,
 } from "lucide-react";
 import "../styles/PaymentVerification.css";
-import { api } from '../../config/api';
-
 const PaymentVerification = () => {
   const [pendingPayments, setPendingPayments] = useState([]);
   const [loading, setLoading] = useState(true);

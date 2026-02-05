@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { DollarSign, ShoppingBag, Package, Tags, ArrowUpRight, Calendar, Bell, X } from 'lucide-react';
 import { useSocket } from '../../context/SocketContext';
 import { api } from '../../config/api';
-
 const Dashboard = () => {
   const { socket } = useSocket();
   const [stats, setStats] = useState({

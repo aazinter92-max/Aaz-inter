@@ -2,9 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, ArrowLeft } from 'lucide-react';
 import Button from '../components/common/Button';
-import './Login.css';
 import { api } from '../config/api';
-
+import './Login.css';
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();

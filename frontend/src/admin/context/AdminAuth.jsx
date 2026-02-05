@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useInactivityLogout from '../../hooks/useInactivityLogout';
 import { api } from '../../config/api';
-
 const AdminAuthContext = createContext();
 
 export const useAdminAuth = () => useContext(AdminAuthContext);

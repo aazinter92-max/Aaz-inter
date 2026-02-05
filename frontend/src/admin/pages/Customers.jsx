@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Mail, Trash2, Calendar, Search } from 'lucide-react';
 import { api } from '../../config/api';
-
 const Customers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);

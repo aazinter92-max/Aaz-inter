@@ -7,6 +7,7 @@ import { isValidEmail, isValidPhone } from "../utils/helpers";
 import Input from "../components/common/Input";
 import Button from "../components/common/Button";
 import Card from "../components/common/Card";
+import { api } from '../config/api';
 import {
   Banknote,
   Package,
@@ -18,8 +19,6 @@ import {
   Upload,
 } from "lucide-react";
 import "./Checkout.css";
-import { api } from '../config/api';
-
 const CheckoutContent = () => {
   const navigate = useNavigate();
   const { cartItems, getCartTotal, clearCart } = useCart();

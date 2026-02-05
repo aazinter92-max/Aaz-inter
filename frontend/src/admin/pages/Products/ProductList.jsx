@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Edit, Trash2, Plus, Search, Package, CheckCircle, XCircle } from 'lucide-react';
 import { api } from '../../../config/api';
-
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,7 +13,7 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch(api('/api/products');
+      const response = await fetch(api('/api/products'));
       
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

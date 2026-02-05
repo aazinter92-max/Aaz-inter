@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Tag } from 'lucide-react';
 import { api } from '../../config/api';
-
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({ name: '', description: '' });
@@ -14,7 +13,7 @@ const Categories = () => {
 
   const fetchCategories = async () => {
     try {
-      const res = await fetch(api('/api/categories');
+      const res = await fetch(api('/api/categories'));
       const data = await res.json();
       setCategories(data);
     } catch (error) {

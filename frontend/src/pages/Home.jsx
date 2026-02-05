@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Search, Package, Heart, TrendingUp, Award, ShoppingBag, CheckCircle, Globe, Shield, Wrench, Headphones, TruckIcon } from 'lucide-react';
 import ProductCard from '../components/product/ProductCard';
 import Button from '../components/common/Button';
-import './Home.css';
 import { api } from '../config/api';
-
+import './Home.css';
 const Home = () => {
   const navigate = useNavigate();
 

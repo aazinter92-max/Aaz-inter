@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Truck, Package, User, MapPin, CreditCard } from 'lucide-react';
 import { api } from '../../../config/api';
-
 const OrderDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();

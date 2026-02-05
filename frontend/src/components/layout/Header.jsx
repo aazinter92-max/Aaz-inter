@@ -14,9 +14,8 @@ import {
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { sendWhatsAppMessage, whatsappMessages } from "../../utils/helpers";
-import "./Header.css";
 import { api } from '../../config/api';
-
+import "./Header.css";
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
@@ -32,7 +31,7 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(api("/api/categories");
+        const res = await fetch(api("/api/categories"));
         const data = await res.json();
         setCategories(data);
       } catch (err) {
@@ -136,8 +135,6 @@ const Header = () => {
       dropdown: false,
     },
   ];
-import { api } from '../../config/api';
-
   return (
     <header className="header-modern">
       {/* Main Navigation */}

@@ -3,9 +3,8 @@ import { useSearchParams } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 import ProductCard from '../components/product/ProductCard';
 import Button from '../components/common/Button';
-import './Products.css';
 import { api } from '../config/api';
-
+import './Products.css';
 const Products = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [loading, setLoading] = useState(true);
@@ -29,8 +28,8 @@ const Products = () => {
     const fetchData = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
-          fetch(api('/api/products'),
-          fetch(api('/api/categories')
+          fetch(api('/api/products')),
+          fetch(api('/api/categories'))
         ]);
         
         const productsData = await productsRes.json();

@@ -7,9 +7,8 @@ import Button from '../components/common/Button';
 import Card from '../components/common/Card';
 import { formatPrice } from '../data/products';
 import { formatDate } from '../utils/helpers';
-import './MyOrders.css';
 import { api } from '../config/api';
-
+import './MyOrders.css';
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);

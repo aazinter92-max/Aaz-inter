@@ -9,7 +9,6 @@ import {
 import Button from '../common/Button';
 import { CreditCard, ShieldCheck, AlertCircle } from 'lucide-react';
 import { api } from '../../config/api';
-
 const CheckoutForm = ({ order, onPaymentSuccess }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -148,7 +147,7 @@ const StripePayment = ({ order, onPaymentSuccess }) => {
   useEffect(() => {
     const fetchConfig = async () => {
       try {
-        const response = await fetch(api('/api/stripe/config');
+        const response = await fetch(api('/api/stripe/config'));
         const { publishableKey } = await response.json();
         setStripePromise(loadStripe(publishableKey));
       } catch (err) {

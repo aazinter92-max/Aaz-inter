@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import useInactivityLogout from '../hooks/useInactivityLogout';
 import { api } from '../config/api';
-
 const AuthContext = createContext();
 
 export const useAuth = () => {

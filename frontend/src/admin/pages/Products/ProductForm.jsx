@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Save, Upload, X, DollarSign, Archive, Tag } from 'lucide-react';
 import { api } from '../../../config/api';
-
 const ProductForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -30,7 +29,7 @@ const ProductForm = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch(api('/api/categories');
+      const response = await fetch(api('/api/categories'));
       const data = await response.json();
       if (Array.isArray(data)) {
         setCategories(data);
@@ -46,7 +45,7 @@ const ProductForm = () => {
 
   const fetchProduct = async () => {
     try {
-      const response = await fetch(api(`/api/products/${id}`);
+      const response = await fetch(api(`/api/products/${id}`));
       if (!response.ok) {
          setError('Product not found');
          return;

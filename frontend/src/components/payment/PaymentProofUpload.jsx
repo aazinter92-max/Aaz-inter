@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Upload, AlertCircle, CheckCircle, Loader } from "lucide-react";
-import "./PaymentProofUpload.css";
 import { api } from '../../config/api';
-
+import "./PaymentProofUpload.css";
 const PaymentProofUpload = ({ orderId, onUploadSuccess }) => {
   const [transactionId, setTransactionId] = useState("");
   const [screenshot, setScreenshot] = useState(null);
@@ -200,7 +199,6 @@ const PaymentProofUpload = ({ orderId, onUploadSuccess }) => {
       </form>
     </div>
   );
-import { api } from '../../config/api';
 };
 
 export default PaymentProofUpload;

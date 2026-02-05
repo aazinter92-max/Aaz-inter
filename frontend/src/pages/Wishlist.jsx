@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { formatPrice } from '../data/products';
 import Button from '../components/common/Button';
-import { api } from './config/api';
+import { api } from '../config/api';
 
 const Wishlist = () => {
   const { user } = useAuth();
