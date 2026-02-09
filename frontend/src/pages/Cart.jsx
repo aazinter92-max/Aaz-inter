@@ -64,13 +64,21 @@ const Cart = () => {
                 <div className="cart-item-image">
                   <img
                     src={(() => {
-                      if (!item.image) return `https://via.placeholder.com/150x150/0A74DA/FFFFFF?text=${encodeURIComponent(item.name.substring(0, 10))}`;
-                      if (item.image.startsWith('/uploads') || item.image.startsWith('uploads/')) {
-                        const normalizedSrc = item.image.replace(/\\/g, '/');
-                        const cleanPath = normalizedSrc.startsWith('/') ? normalizedSrc : `/${normalizedSrc}`;
+                      let imgSrc = item.image;
+                      if (!imgSrc) return `https://via.placeholder.com/150x150/0A74DA/FFFFFF?text=${encodeURIComponent(item.name.substring(0, 10))}`;
+                      
+                      imgSrc = imgSrc.replace(/\\/g, '/');
+                      
+                      if (imgSrc.includes('localhost')) {
+                        const pathPart = imgSrc.split(/localhost:\d+/)[1] || imgSrc;
+                        return `${API_URL}${pathPart.startsWith('/') ? pathPart : '/' + pathPart}`;
+                      }
+                      
+                      if (imgSrc.startsWith('/uploads') || imgSrc.startsWith('uploads/')) {
+                        const cleanPath = imgSrc.startsWith('/') ? imgSrc : `/${imgSrc}`;
                         return `${API_URL}${cleanPath}`;
                       }
-                      return item.image;
+                      return imgSrc;
                     })()}
                     alt={item.name}
                     onError={(e) => e.target.src = 'https://via.placeholder.com/150?text=No+Img'}

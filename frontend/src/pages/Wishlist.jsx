@@ -95,10 +95,15 @@ const Wishlist = () => {
             const product = item.product;
             let productImage = product.image;
             
-            if (productImage && (productImage.startsWith('/uploads') || productImage.startsWith('uploads/'))) {
-              const normalizedSrc = productImage.replace(/\\/g, '/');
-              const cleanPath = normalizedSrc.startsWith('/') ? normalizedSrc : `/${normalizedSrc}`;
-              productImage = `${API_URL}${cleanPath}`;
+            if (productImage) {
+              productImage = productImage.replace(/\\/g, '/');
+              if (productImage.includes('localhost')) {
+                const pathPart = productImage.split(/localhost:\d+/)[1] || productImage;
+                productImage = `${API_URL}${pathPart.startsWith('/') ? pathPart : '/' + pathPart}`;
+              } else if (productImage.startsWith('/uploads') || productImage.startsWith('uploads/')) {
+                const cleanPath = productImage.startsWith('/') ? productImage : `/${productImage}`;
+                productImage = `${API_URL}${cleanPath}`;
+              }
             }
             
             const imagePlaceholder = productImage || `https://via.placeholder.com/300x300/0A74DA/FFFFFF?text=${encodeURIComponent(product.name)}`;

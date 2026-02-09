@@ -23,14 +23,23 @@ const ProductCard = ({ product }) => {
   };
 
   // Determine image source
+  // Determine image source
   let imageSrc = product.image;
   
-  // If it's a relative path starting with /uploads or uploads/, prefix with backend URL
-  if (imageSrc && (imageSrc.startsWith('/uploads') || imageSrc.startsWith('uploads/'))) {
-    // Normalize slashes (Windows to Unix)
-    const normalizedSrc = imageSrc.replace(/\\/g, '/');
-    const cleanPath = normalizedSrc.startsWith('/') ? normalizedSrc : `/${normalizedSrc}`;
-    imageSrc = `${API_URL}${cleanPath}`;
+  if (imageSrc) {
+    // 1. Normalize slashes (Windows fix)
+    imageSrc = imageSrc.replace(/\\/g, '/');
+    
+    // 2. Handle localhost URLs (legacy data fix)
+    if (imageSrc.includes('localhost')) {
+      const pathPart = imageSrc.split(/localhost:\d+/)[1] || imageSrc;
+      imageSrc = `${API_URL}${pathPart.startsWith('/') ? pathPart : '/' + pathPart}`;
+    }
+    // 3. Handle relative paths
+    else if (imageSrc.startsWith('/uploads') || imageSrc.startsWith('uploads/')) {
+       const cleanPath = imageSrc.startsWith('/') ? imageSrc : `/${imageSrc}`;
+       imageSrc = `${API_URL}${cleanPath}`;
+    }
   }
   
   // Fallback to placeholder if no image

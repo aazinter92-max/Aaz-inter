@@ -205,7 +205,14 @@ const Header = () => {
                   onMouseEnter={() => setShowUserMenu(true)}
                   onMouseLeave={() => setShowUserMenu(false)}
                 >
-                  <button className="user-btn-modern">
+                  <button 
+                    className="user-btn-modern" 
+                    type="button" 
+                    onClick={(e) => { 
+                      e.stopPropagation(); 
+                      setShowUserMenu(!showUserMenu); 
+                    }} 
+                  >
                     <User size={20} />
                     <span>{user.name}</span>
                     <ChevronDown
