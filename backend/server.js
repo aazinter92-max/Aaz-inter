@@ -66,7 +66,8 @@ app.get('/api/health', (req, res) => {
     status: 'healthy', 
     timestamp: new Date().toISOString(),
     env: process.env.NODE_ENV,
-    smtp: process.env.SMTP_EMAIL ? 'configured' : 'missing'
+    resend: process.env.RESEND_API_KEY ? 'DETECTED' : 'MISSING',
+    smtp_legacy: process.env.SMTP_EMAIL ? 'detected' : 'missing'
   });
 });
 

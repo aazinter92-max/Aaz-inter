@@ -113,7 +113,7 @@ const registerUser = async (req, res, next) => {
            res.status(500);
            throw new Error(err.message === 'Email service timed out' 
              ? 'Email service took too long to respond. Please try again in 5 minutes.' 
-             : 'Email verification failed to send. Please check your email address.');
+             : `Email error: ${err.message}`);
          }
       }
       res.status(400);
@@ -165,8 +165,8 @@ const registerUser = async (req, res, next) => {
          await User.deleteOne({ _id: user._id });
          res.status(500);
          throw new Error(err.message === 'Email service timed out' 
-           ? 'Email service took too long to respond. Please try again in 5 minutes.' 
-           : 'Email verification failed to send. Please ensure your email is correct.');
+           ? 'Email service took too long to respond.' 
+           : `Email error: ${err.message}`);
        }
     } else {
       res.status(400);
