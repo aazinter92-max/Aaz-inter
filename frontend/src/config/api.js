@@ -1,8 +1,8 @@
 // API Configuration
 const API_BASE_URL = import.meta.env.VITE_API_URL || (
   import.meta.env.MODE === 'production' 
-    ? '' // Use same domain in production (Vercel)
-    : 'http://localhost:5000' // Use localhost in development
+    ? 'https://aaz-inter-production.up.railway.app' // Production backend (Railway)
+    : 'http://localhost:5000' // Development backend (localhost)
 );
 
 export const API_URL = API_BASE_URL;

@@ -100,7 +100,8 @@ const ProductForm = () => {
         // Convert relative path to full URL
         const imageUrl = data.image.startsWith('http') 
           ? data.image 
-          : `http://localhost:5000${data.image}`;
+          const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'production' ? 'https://aaz-inter-production.up.railway.app' : 'http://localhost:5000');
+          : `${baseUrl}${data.image}`;
         
         setFormData(prev => ({ ...prev, image: imageUrl }));
       } else {

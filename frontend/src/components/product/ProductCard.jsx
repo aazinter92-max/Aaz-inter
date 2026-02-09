@@ -27,7 +27,8 @@ const ProductCard = ({ product }) => {
   // If it's a relative path starting with /uploads or uploads/, prefix with backend URL
   if (imageSrc && (imageSrc.startsWith('/uploads') || imageSrc.startsWith('uploads/'))) {
     const cleanPath = imageSrc.startsWith('/') ? imageSrc : `/${imageSrc}`;
-    imageSrc = `http://localhost:5000${cleanPath}`;
+    const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'production' ? 'https://aaz-inter-production.up.railway.app' : 'http://localhost:5000');
+    imageSrc = `${baseUrl}${cleanPath}`;
   }
   
   // Fallback to placeholder if no image

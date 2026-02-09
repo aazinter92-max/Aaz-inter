@@ -87,7 +87,8 @@ app.disable("x-powered-by");
 const allowedOrigins = [
   "http://localhost:5173", // Development frontend
   "http://localhost:3000", // Alternative dev port
-  process.env.FRONTEND_URL, // Production frontend
+  "https://aaz-international.vercel.app", // Production frontend (Vercel)
+  process.env.FRONTEND_URL, // Production frontend (env var)
 ].filter(Boolean);
 
 app.use(

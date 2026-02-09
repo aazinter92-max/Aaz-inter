@@ -36,7 +36,8 @@ export const SocketProvider = ({ children }) => {
         return;
       }
 
-      const socketInstance = io('http://localhost:5000', {
+      const backendUrl = import.meta.env.VITE_API_URL || (import.meta.env.MODE === 'production' ? 'https://aaz-inter-production.up.railway.app' : 'http://localhost:5000');
+      const socketInstance = io(backendUrl, {
         transports: ['websocket', 'polling'],
         timeout: 5000,
         autoConnect: true
