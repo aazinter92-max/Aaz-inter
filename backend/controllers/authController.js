@@ -116,11 +116,14 @@ const registerUser = async (req, res, next) => {
             
             await Promise.race([sendEmailPromise, timeoutPromise]);
 
+            userExists.isVerified = true;
+            await userExists.save();
+
             res.status(200).json({
-              message: 'Verification email sent. Please verify your account.',
+              message: 'Registration successful!',
               email: userExists.email,
-              isVerified: false,
-              ...(process.env.NODE_ENV === 'development' && { otp })
+              isVerified: true,
+              token: generateToken(userExists._id)
             });
             return;
           } catch (err) {
@@ -157,7 +160,7 @@ const registerUser = async (req, res, next) => {
       password,
       otp,
       otpExpire: Date.now() + 10 * 60 * 1000,
-      isVerified: false
+      isVerified: true
     });
 
     if (user) {
@@ -194,10 +197,10 @@ const registerUser = async (req, res, next) => {
          await Promise.race([sendEmailPromise, timeoutPromise]);
          
          res.status(201).json({
-           message: 'Verification email sent. Please verify your account.',
+           message: 'Registration successful!',
            email: user.email,
-           isVerified: false,
-           ...(process.env.NODE_ENV === 'development' && { otp })
+           isVerified: true,
+           token: generateToken(user._id)
          });
        } catch (err) {
          console.error('Email sending failed:', err.message);
