@@ -88,12 +88,19 @@ const registerUser = async (req, res, next) => {
          }
 
          try {
-           await sendEmail({
+           // Timeout protection (15 seconds)
+           const sendEmailPromise = sendEmail({
              email: userExists.email,
              subject: 'AAZ Medical - Verify Your Email',
              message: `Your verification code is: ${otp}. It expires in 10 minutes.`,
              html: `<h1>Email Verification</h1><p>Your verification code is:</p><h2>${otp}</h2><p>It expires in 10 minutes.</p>`
            });
+           
+           const timeoutPromise = new Promise((_, reject) => 
+             setTimeout(() => reject(new Error('Email service timed out')), 15000)
+           );
+           
+           await Promise.race([sendEmailPromise, timeoutPromise]);
            
            res.status(200).json({
              message: 'Verification email sent. Please verify your account.',
@@ -102,9 +109,11 @@ const registerUser = async (req, res, next) => {
            });
            return;
          } catch (err) {
-           console.error('Email sending failed:', err.message);
+           console.error('Email sending failed or timed out:', err.message);
            res.status(500);
-           throw new Error('Email verification failed to send. Please check your email address.');
+           throw new Error(err.message === 'Email service timed out' 
+             ? 'Email service took too long to respond. Please try again in 5 minutes.' 
+             : 'Email verification failed to send. Please check your email address.');
          }
       }
       res.status(400);
@@ -132,12 +141,19 @@ const registerUser = async (req, res, next) => {
        }
 
        try {
-         await sendEmail({
+         // Timeout protection (15 seconds)
+         const sendEmailPromise = sendEmail({
            email: user.email,
            subject: 'AAZ Medical - Verify Your Email',
            message: `Your verification code is: ${otp}. It expires in 10 minutes.`,
            html: `<h1>Email Verification</h1><p>Your verification code is:</p><h2>${otp}</h2><p>It expires in 10 minutes.</p>`
          });
+         
+         const timeoutPromise = new Promise((_, reject) => 
+           setTimeout(() => reject(new Error('Email service timed out')), 15000)
+         );
+         
+         await Promise.race([sendEmailPromise, timeoutPromise]);
          
          res.status(201).json({
            message: 'Verification email sent. Please verify your account.',
@@ -145,10 +161,12 @@ const registerUser = async (req, res, next) => {
            isVerified: false
          });
        } catch (err) {
-         console.error('Email sending failed:', err.message);
+         console.error('Email sending failed or timed out:', err.message);
          await User.deleteOne({ _id: user._id });
          res.status(500);
-         throw new Error('Email verification failed to send. Please ensure your email is correct.');
+         throw new Error(err.message === 'Email service timed out' 
+           ? 'Email service took too long to respond. Please try again in 5 minutes.' 
+           : 'Email verification failed to send. Please ensure your email is correct.');
        }
     } else {
       res.status(400);
