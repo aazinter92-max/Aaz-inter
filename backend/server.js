@@ -88,7 +88,8 @@ const allowedOrigins = [
   "http://localhost:5173", // Development frontend
   "http://localhost:3000", // Alternative dev port
   "https://aaz-international.vercel.app", // Production frontend (Vercel)
-  "https://cheerful-profiterole-accab4.netlify.app", // Production frontend (Netlify)
+  "https://cheerful-profiterole-accab4.netlify.app", // Production frontend (Netlify old)
+  "https://equipments.netlify.app", // Production frontend (Netlify new)
   process.env.FRONTEND_URL, // Production frontend (env var)
 ].filter(Boolean);
 
