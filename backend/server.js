@@ -88,6 +88,7 @@ const allowedOrigins = [
   "http://localhost:5173", // Development frontend
   "http://localhost:3000", // Alternative dev port
   "https://aaz-international.vercel.app", // Production frontend (Vercel)
+  "https://cheerful-profiterole-accab4.netlify.app", // Production frontend (Netlify)
   process.env.FRONTEND_URL, // Production frontend (env var)
 ].filter(Boolean);
 
@@ -97,7 +98,7 @@ app.use(
       // Allow requests with no origin (mobile apps, Postman, etc.)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".vercel.app")) {
+      if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".vercel.app") || origin.endsWith(".netlify.app")) {
         callback(null, true);
       } else {
         console.warn(
