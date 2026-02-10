@@ -9,7 +9,7 @@ import { api } from '../config/api';
 import './Profile.css';
 const Profile = () => {
   const navigate = useNavigate();
-  const { user, logout, updateProfile } = useAuth();
+  const { user, logout, updateProfile, resendVerificationEmail } = useAuth();
   const { getCartCount } = useCart();
   const { socket, isConnected } = useSocket();
   const [isEditing, setIsEditing] = useState(false);
@@ -18,6 +18,8 @@ const Profile = () => {
     email: user?.email || ''
   });
   const [success, setSuccess] = useState('');
+  const [verificationMessage, setVerificationMessage] = useState('');
+  const [isResending, setIsResending] = useState(false);
   const [orderCount, setOrderCount] = useState(0);
   const [recentOrders, setRecentOrders] = useState([]);
 
@@ -219,6 +221,73 @@ const Profile = () => {
                 )}
               </form>
             </div>
+
+            {/* Email Verification Section */}
+            {!user.isVerified && (
+              <div className="profile-section">
+                <div className="section-header-compact">
+                  <div className="h-text">
+                    <h2>Email Verification</h2>
+                    <p>Verify your email to place orders and access all features</p>
+                  </div>
+                </div>
+
+                <div className="verification-alert" style={{
+                  background: '#FFF3CD',
+                  border: '1px solid #FFC107',
+                  borderRadius: '8px',
+                  padding: '20px',
+                  marginBottom: '20px'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'start', gap: '12px' }}>
+                    <Mail size={24} style={{ color: '#856404', flexShrink: 0, marginTop: '2px' }} />
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ margin: '0 0 8px 0', color: '#856404', fontSize: '16px', fontWeight: '600' }}>
+                        Email Not Verified
+                      </h4>
+                      <p style={{ margin: '0 0 12px 0', color: '#856404', fontSize: '14px', lineHeight: '1.5' }}>
+                        Your email address <strong>{user.email}</strong> has not been verified yet. 
+                        You must verify your email before you can place orders.
+                      </p>
+                      <p style={{ margin: '0 0 16px 0', color: '#856404', fontSize: '14px' }}>
+                        Check your inbox for the verification email or click below to resend it.
+                      </p>
+                      <Button 
+                        variant="primary" 
+                        size="small"
+                        loading={isResending}
+                        onClick={async () => {
+                          setIsResending(true);
+                          setVerificationMessage('');
+                          const result = await resendVerificationEmail();
+                          setIsResending(false);
+                          if (result.success) {
+                            setVerificationMessage('✅ Verification email sent! Check your inbox.');
+                          } else {
+                            setVerificationMessage('❌ ' + result.message);
+                          }
+                          setTimeout(() => setVerificationMessage(''), 5000);
+                        }}
+                      >
+                        {isResending ? 'Sending...' : 'Resend Verification Email'}
+                      </Button>
+                      {verificationMessage && (
+                        <p style={{ 
+                          marginTop: '12px', 
+                          padding: '8px 12px', 
+                          background: verificationMessage.startsWith('✅') ? '#D4EDDA' : '#F8D7DA',
+                          color: verificationMessage.startsWith('✅') ? '#155724' : '#721C24',
+                          borderRadius: '4px',
+                          fontSize: '14px'
+                        }}>
+                          {verificationMessage}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Order History Section */}
             <div className="profile-section">

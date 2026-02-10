@@ -6,10 +6,12 @@ const {
   registerUser, 
   getMe, 
   verifyEmail,
-  forgotPassword,
-  resetPassword
+  resendVerificationEmail,
+  getSecurityQuestion,
+  verifySecurityAnswer,
+  resetPasswordWithSecurity
 } = require('../controllers/authController');
-const { protect } = require('../middleware/authMiddleware');
+const { protect, protectAllowUnverified } = require('../middleware/authMiddleware');
 const { authLimiter, passwordResetLimiter } = require('../middleware/rateLimiter');
 const { validateRegistration, validateLogin } = require('../middleware/validation');
 
@@ -17,8 +19,8 @@ const { validateRegistration, validateLogin } = require('../middleware/validatio
 // SECURE AUTHENTICATION ROUTES
 // ============================================
 
-// Get current user (protected)
-router.get('/me', protect, getMe);
+// Get current user (protected, allows unverified users to access profile)
+router.get('/me', protectAllowUnverified, getMe);
 
 // Admin login (rate limited + validated)
 router.post('/admin/login', 
@@ -41,22 +43,35 @@ router.post('/register',
   registerUser
 );
 
-// Email verification (rate limited)
-router.post('/verify', 
-  authLimiter,           // Prevent brute force OTP
+// Email verification via link (token in URL)
+router.get('/verify-email/:token', 
+  authLimiter,
   verifyEmail
 );
 
-// Forgot password (strict rate limiting)
-router.post('/forgot-password', 
-  passwordResetLimiter,  // 3 attempts per hour
-  forgotPassword
+// Resend verification email (for logged in but unverified users)
+router.post('/resend-verification',
+  authLimiter,
+  protectAllowUnverified,  // Must be logged in (but can be unverified)
+  resendVerificationEmail
 );
 
-// Reset password (rate limited)
-router.post('/reset-password/:resetToken', 
-  passwordResetLimiter,  // 3 attempts per hour
-  resetPassword
+// Forgot password - Step 1: Get Question
+router.post('/forgot-password/question', 
+  passwordResetLimiter,
+  getSecurityQuestion
+);
+
+// Forgot password - Step 2: Verify Answer
+router.post('/forgot-password/verify-answer', 
+  passwordResetLimiter,
+  verifySecurityAnswer
+);
+
+// Forgot password - Step 3: Reset
+router.post('/forgot-password/reset', 
+  passwordResetLimiter,
+  resetPasswordWithSecurity
 );
 
 module.exports = router;

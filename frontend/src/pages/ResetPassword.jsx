@@ -2,11 +2,12 @@ import { useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Lock, Eye, EyeOff, CheckCircle, ArrowLeft } from 'lucide-react';
 import Button from '../components/common/Button';
-import { api } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 import './Login.css';
 const ResetPassword = () => {
   const { token } = useParams();
   const navigate = useNavigate();
+  const { resetPasswordSec } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     password: '',
@@ -28,22 +29,15 @@ const ResetPassword = () => {
     }
 
     setLoading(true);
-    try {
-      const response = await fetch(api(`/api/auth/reset-password/${token}`), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: formData.password }),
-      });
-      if (response.ok) {
-        setSuccess(true);
-        setTimeout(() => navigate('/login'), 3000);
-      } else {
-        setError('Link expired or invalid. Please request a new one.');
-      }
-    } catch (err) {
-      setError('Connection error. Please try again.');
-    } finally {
-      setLoading(false);
+    setError('');
+    const result = await resetPasswordSec(token, formData.password);
+    setLoading(false);
+
+    if (result.success) {
+      setSuccess(true);
+      setTimeout(() => navigate('/login'), 3000);
+    } else {
+      setError(result.message || 'Link expired or invalid. Please try again.');
     }
   };
 

@@ -37,7 +37,7 @@ const protect = async (req, res, next) => {
         if (!req.admin) {
           req.user = await User.findById(decoded.id).select('-password -otp -resetPasswordToken');
           
-          // Verify user account isverified
+          // Enforce email verification for regular users
           if (req.user && !req.user.isVerified) {
             res.status(403);
             throw new Error('Account not verified. Please verify your email.');
@@ -155,8 +155,75 @@ const optionalAuth = async (req, res, next) => {
   }
 };
 
+/**
+ * PROTECT (ALLOW UNVERIFIED)
+ * For routes that need authentication but allow unverified users
+ * (e.g., resend verification email)
+ */
+const protectAllowUnverified = async (req, res, next) => {
+  try {
+    let token;
+
+    // Extract token from Authorization header
+    if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer')
+    ) {
+      try {
+        token = req.headers.authorization.split(' ')[1];
+
+        // Verify token hasn't been tampered with
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        // Check token age (additional security)
+        const tokenAge = Date.now() - decoded.iat * 1000;
+        const maxAge = 7 * 24 * 60 * 60 * 1000; // 7 days
+        
+        if (tokenAge > maxAge) {
+          res.status(401);
+          throw new Error('Token expired. Please login again.');
+        }
+
+        // Try to find admin first
+        req.admin = await Admin.findById(decoded.id).select('-password');
+        
+        // If not admin, try regular user (ALLOW UNVERIFIED)
+        if (!req.admin) {
+          req.user = await User.findById(decoded.id).select('-password -otp -resetPasswordToken');
+          // NOTE: We don't check isVerified here - that's the point of this middleware
+        }
+
+        // If neither found, token is invalid
+        if (!req.admin && !req.user) {
+          res.status(401);
+          throw new Error('User no longer exists.');
+        }
+
+        next();
+      } catch (jwtError) {
+        console.error('JWT Verification Error:', jwtError.message);
+        res.status(401);
+        
+        // Generic error message (don't reveal why token failed)
+        throw new Error('Authentication failed. Please login again.');
+      }
+    } else {
+      res.status(401);
+      throw new Error('Not authorized. No token provided.');
+    }
+  } catch (error) {
+    // Ensure we don't send headers twice
+    if (!res.headersSent) {
+      res.status(401);
+    }
+    next(error);
+  }
+};
+
+
 module.exports = { 
   protect, 
+  protectAllowUnverified,
   adminOnly, 
   verifiedOnly,
   optionalAuth 

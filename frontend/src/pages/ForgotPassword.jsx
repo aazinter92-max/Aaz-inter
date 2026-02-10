@@ -1,88 +1,128 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Mail, ArrowLeft, Send, CheckCircle } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Mail, ArrowLeft, Lock } from 'lucide-react';
 import Button from '../components/common/Button';
-import { api } from '../config/api';
+import { useAuth } from '../context/AuthContext';
 import './Login.css';
 const ForgotPassword = () => {
+  const navigate = useNavigate();
+  const { fetchSecurityQuestion, verifyAnswer } = useAuth();
+  
+  const [step, setStep] = useState(1); // 1: Email, 2: Question
   const [email, setEmail] = useState('');
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e) => {
+  // Step 1: Submit Email to get Question
+  const handleEmailSubmit = async (e) => {
     e.preventDefault();
-    setError('');
     if (!email) {
       setError('Please enter your email address');
       return;
     }
+    
     setLoading(true);
-    try {
-      const response = await fetch(api('/api/auth/forgot-password'), {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
-      });
-      const data = await response.json();
-      if (response.ok) {
-        setSuccess(true);
-      } else {
-        setError(data.message || 'Failed to send reset email.');
-      }
-    } catch (err) {
-      setError('Connection error. Please try again.');
-    } finally {
-      setLoading(false);
+    setError('');
+    const result = await fetchSecurityQuestion(email);
+    setLoading(false);
+
+    if (result.success) {
+      setQuestion(result.question);
+      setStep(2);
+    } else {
+      setError('Invalid request. Please try again.');
+    }
+  };
+
+  // Step 2: Submit Answer to get Reset Token
+  const handleAnswerSubmit = async (e) => {
+    e.preventDefault();
+    if (!answer) {
+      setError('Please enter your answer');
+      return;
+    }
+
+    setLoading(true);
+    setError('');
+    const result = await verifyAnswer(email, answer);
+    setLoading(false);
+
+    if (result.success) {
+      // Navigate to Reset Password page with the temporary token
+      navigate(`/reset-password/${result.resetToken}`);
+    } else {
+      setError('Invalid answer. Please try again.');
     }
   };
 
   return (
     <div className="auth-page">
       <div className="auth-centered-box">
-        {success ? (
-          <div className="animate-fade-in">
-            <div className="auth-header-minimal">
-              <CheckCircle size={48} style={{ color: 'var(--user-secondary)', marginBottom: '1rem' }} />
-              <h1>Check Your Email</h1>
-              <p>We've sent recovery instructions to <strong>{email}</strong></p>
-            </div>
-            <p style={{ color: 'var(--user-text-muted)', fontSize: '0.95rem', marginBottom: '2rem' }}>
-              Please check your inbox and follow the link to reset your security credentials.
-            </p>
-            <Button variant="outline" fullWidth onClick={() => setSuccess(false)}>
-              Try a different email
-            </Button>
-          </div>
-        ) : (
-          <>
-            <div className="auth-header-minimal">
-              <h1>Recover Access</h1>
-              <p>Enter your email to receive recovery instructions</p>
-            </div>
-            <form className="auth-form" onSubmit={handleSubmit}>
-              {error && <div className="auth-error-flat">{error}</div>}
-              <div className="form-group-modern">
-                <label htmlFor="email">Work Email</label>
-                <div className="input-modern-group">
-                  <Mail size={18} className="input-icon-modern" />
-                  <input
-                    type="email"
-                    id="email"
-                    placeholder="name@organization.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    disabled={loading}
-                  />
-                </div>
+        <div className="auth-header-minimal">
+          <h1>Recover Access</h1>
+          <p>{step === 1 ? 'Enter your email to retrieve your security question' : 'Answer your security question to reset password'}</p>
+        </div>
+
+        {step === 1 ? (
+          <form className="auth-form" onSubmit={handleEmailSubmit}>
+            {error && <div className="auth-error-flat">{error}</div>}
+            <div className="form-group-modern">
+              <label htmlFor="email">Work Email</label>
+              <div className="input-modern-group">
+                <Mail size={18} className="input-icon-modern" />
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="name@organization.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  disabled={loading}
+                />
               </div>
-              <Button type="submit" variant="primary" fullWidth disabled={loading} className="auth-submit-btn">
-                {loading ? 'Processing...' : 'Send Recovery Link'}
-              </Button>
-            </form>
-          </>
+            </div>
+            <Button type="submit" variant="primary" fullWidth loading={loading} className="auth-submit-btn">
+              Show Security Question
+            </Button>
+          </form>
+        ) : (
+          <form className="auth-form" onSubmit={handleAnswerSubmit}>
+            {error && <div className="auth-error-flat">{error}</div>}
+            
+            <div className="form-group-modern">
+               <div className="security-question-box" style={{ background: '#f8fafc', padding: '15px', borderRadius: '8px', borderLeft: '4px solid var(--user-primary)', marginBottom: '10px' }}>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--user-text-muted)', marginBottom: '5px', textAlign: 'left' }}>YOUR SECURITY QUESTION:</p>
+                  <p style={{ fontWeight: '700', color: 'var(--user-text-dark)', textAlign: 'left', fontSize: '1.05rem' }}>{question}</p>
+               </div>
+            </div>
+
+            <div className="form-group-modern">
+              <label htmlFor="answer">Your Secret Answer</label>
+              <div className="input-modern-group">
+                <Lock size={18} className="input-icon-modern" />
+                <input
+                  type="text"
+                  id="answer"
+                  placeholder="Enter your security answer"
+                  value={answer}
+                  onChange={(e) => setAnswer(e.target.value)}
+                  required
+                  disabled={loading}
+                  autoFocus
+                />
+              </div>
+            </div>
+            <Button type="submit" variant="primary" fullWidth loading={loading} className="auth-submit-btn">
+              Verify Answer
+            </Button>
+            <Button type="button" variant="outline" fullWidth onClick={() => setStep(1)} disabled={loading} style={{ marginTop: '10px' }}>
+               Use Different Email
+            </Button>
+          </form>
         )}
+
         <div className="auth-footer-minimal">
           <Link to="/login" className="auth-link-bold" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
             <ArrowLeft size={18} /> Back to Sign In

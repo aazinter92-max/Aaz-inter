@@ -14,9 +14,20 @@ const Signup = () => {
     name: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    securityQuestion: '',
+    securityAnswer: ''
   });
   const [error, setError] = useState('');
+
+  const securityQuestions = [
+    "What was the name of your first school?",
+    "What is your mother's maiden name?",
+    "What was the name of your first pet?",
+    "What city were you born in?",
+    "What is your favorite book?",
+    "What was your childhood nickname?"
+  ];
 
   const handleChange = (e) => {
     setFormData({
@@ -28,8 +39,8 @@ const Signup = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Please fill in all fields');
+    if (!formData.name || !formData.email || !formData.password || !formData.securityQuestion || !formData.securityAnswer) {
+      setError('Please fill in all required fields');
       return;
     }
     
@@ -44,16 +55,17 @@ const Signup = () => {
     }
 
     setLoading(true);
-    const result = await signup(formData.name, formData.email, formData.password);
+    const result = await signup({
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+      securityQuestion: formData.securityQuestion,
+      securityAnswer: formData.securityAnswer
+    });
     setLoading(false);
 
     if (result.success) {
-      if (result.isVerified) {
-        // If backend returns verified (e.g. SMTP issue fallback), skip verification page
-        navigate('/');
-      } else {
-        navigate(`/verify-email?email=${encodeURIComponent(formData.email)}`);
-      }
+      navigate('/verify-email?registered=true');
     } else {
       setError(result.message);
     }
@@ -146,7 +158,6 @@ const Signup = () => {
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
                 </div>
-                <p className="field-hint">Min 6 characters, with uppercase, number & special char.</p>
               </div>
 
               <div className="form-group-modern">
@@ -163,6 +174,43 @@ const Signup = () => {
                     required
                   />
                 </div>
+              </div>
+
+              <div className="form-group-modern">
+                <label htmlFor="securityQuestion">Security Question</label>
+                <div className="input-modern-group">
+                  <ShieldCheck size={18} className="input-icon-modern" />
+                  <select
+                    id="securityQuestion"
+                    name="securityQuestion"
+                    value={formData.securityQuestion}
+                    onChange={handleChange}
+                    required
+                    className="select-modern"
+                  >
+                    <option value="">Select a security question</option>
+                    {securityQuestions.map((q, i) => (
+                      <option key={i} value={q}>{q}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              <div className="form-group-modern">
+                <label htmlFor="securityAnswer">Security Answer</label>
+                <div className="input-modern-group">
+                  <Lock size={18} className="input-icon-modern" />
+                  <input
+                    type="text"
+                    id="securityAnswer"
+                    name="securityAnswer"
+                    placeholder="Your answer (Hashed securely)"
+                    value={formData.securityAnswer}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+                <p className="field-hint">Used for password recovery. Keep it safe.</p>
               </div>
 
               <Button 

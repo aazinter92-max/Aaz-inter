@@ -53,6 +53,18 @@ const validateRegistration = (req, res, next) => {
       }
     }
 
+    // Validate security question
+    const { securityQuestion, securityAnswer } = req.body;
+    if (!securityQuestion || typeof securityQuestion !== 'string') {
+      errors.push('Security question is required');
+    }
+
+    if (!securityAnswer || typeof securityAnswer !== 'string') {
+      errors.push('Security answer is required');
+    } else if (securityAnswer.trim().length < 2) {
+      errors.push('Security answer is too short');
+    }
+
     if (errors.length > 0) {
       return res.status(400).json({
         success: false,
@@ -65,12 +77,16 @@ const validateRegistration = (req, res, next) => {
     // Sanitize inputs
     req.body.name = validator.escape(name.trim());
     req.body.email = validator.normalizeEmail(email.toLowerCase().trim());
+    req.body.securityQuestion = validator.escape(securityQuestion.trim());
+    req.body.securityAnswer = securityAnswer.trim().toLowerCase(); // Normalize for easier answer entry
     
     // Only allow these specific fields (prevent mass assignment)
     req.body = {
       name: req.body.name,
       email: req.body.email,
-      password: req.body.password
+      password: req.body.password,
+      securityQuestion: req.body.securityQuestion,
+      securityAnswer: req.body.securityAnswer
     };
 
     next();

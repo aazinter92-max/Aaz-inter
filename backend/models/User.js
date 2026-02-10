@@ -12,6 +12,8 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true
     },
     password: {
       type: String,
@@ -26,10 +28,18 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false
     },
-    otp: {
+    securityQuestion: {
+      type: String,
+      required: [true, 'Please provide a security question']
+    },
+    securityAnswer: {
+      type: String,
+      required: [true, 'Please provide a security answer']
+    },
+    emailVerificationToken: {
       type: String
     },
-    otpExpire: {
+    emailVerificationExpire: {
       type: Date
     },
     resetPasswordToken: {
@@ -41,7 +51,7 @@ const userSchema = mongoose.Schema(
     accountStatus: {
       type: String,
       enum: ['active', 'inactive', 'suspended'],
-      default: 'inactive'
+      default: 'active'
     }
   },
   {
@@ -52,6 +62,16 @@ const userSchema = mongoose.Schema(
 // Match user entered password to hashed password in database
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Match user entered security answer to hashed answer in database
+userSchema.methods.matchSecurityAnswer = async function (enteredAnswer) {
+  // Safety check: if user doesn't have a security answer (old accounts), return false
+  if (!this.securityAnswer) {
+    console.warn(`⚠️ User ${this.email} does not have a security answer set`);
+    return false;
+  }
+  return await bcrypt.compare(enteredAnswer, this.securityAnswer);
 };
 
 // Generate and hash password reset token
@@ -68,17 +88,24 @@ userSchema.methods.getResetPasswordToken = function() {
   // Set expire (30 minutes)
   this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
 
-  return resetToken; // Return unhashed token to send via email
+  return resetToken; // Return unhashed token to send
 };
 
-// Encrypt password using bcrypt
+// Encrypt password and security answer using bcrypt
 userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) {
+  if (!this.isModified('password') && !this.isModified('securityAnswer')) {
     next();
   }
 
-  const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  if (this.isModified('password')) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+
+  if (this.isModified('securityAnswer')) {
+    const salt = await bcrypt.genSalt(10);
+    this.securityAnswer = await bcrypt.hash(this.securityAnswer, salt);
+  }
 });
 
 const User = mongoose.model('User', userSchema);

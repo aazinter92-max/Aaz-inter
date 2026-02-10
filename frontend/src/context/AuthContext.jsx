@@ -18,22 +18,34 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const customAuthCheck = async () => {
       const storedUser = localStorage.getItem('user');
+      console.log('🔍 Auth Check: Stored user exists?', !!storedUser);
+      
       if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
         try {
+          const parsedUser = JSON.parse(storedUser);
+          console.log('👤 Restoring user:', parsedUser.email);
+          
           const res = await fetch(api('/api/auth/me'), {
             headers: { Authorization: `Bearer ${parsedUser.token}` }
           });
+          
           if (res.ok) {
+            console.log('✅ Auth check successful - User restored');
             setUser(parsedUser);
           } else {
+            console.warn('❌ Auth check failed - Token invalid or expired');
             localStorage.removeItem('user');
             localStorage.removeItem('aaz-cart');
             setUser(null);
           }
         } catch (err) {
-          console.error(err);
+          console.error('❌ Auth check error:', err);
+          localStorage.removeItem('user');
+          localStorage.removeItem('aaz-cart');
+          setUser(null);
         }
+      } else {
+        console.log('ℹ️ No stored user found');
       }
       setLoading(false);
     };
@@ -59,21 +71,16 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const signup = useCallback(async (name, email, password) => {
+  const signup = useCallback(async (userData) => {
     try {
       const response = await fetch(api('/api/auth/register'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(userData),
       });
       const data = await response.json();
       
       if (response.ok) {
-        // If backend auto-verified (e.g. SMTP issue), log user in immediately
-        if (data.isVerified && data.token) {
-          localStorage.setItem('user', JSON.stringify(data));
-          setUser(data);
-        }
         return { success: true, email: data.email, isVerified: data.isVerified };
       }
       return { success: false, message: data.message || data.error || 'Signup failed' };
@@ -83,24 +90,70 @@ export const AuthProvider = ({ children }) => {
     }
   }, []);
 
-  const verifyEmail = useCallback(async (email, otp) => {
+  const verifyEmailByToken = useCallback(async (token) => {
     try {
-      const response = await fetch(api('/api/auth/verify'), {
-        method: 'POST',
+      const response = await fetch(api(`/api/auth/verify-email/${token}`), {
+        method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp }),
       });
       const data = await response.json();
       if (response.ok) {
-        if (data.token) {
-          localStorage.setItem('user', JSON.stringify(data));
-          setUser(data);
-        }
-        return { success: true };
+        return { success: true, message: data.message };
       }
-      return { success: false, message: data.message || data.error || 'Verification failed' };
+      return { success: false, message: data.message || 'Verification failed' };
     } catch (error) {
       return { success: false, message: 'Server error. Please try again later.' };
+    }
+  }, []);
+
+  const fetchSecurityQuestion = useCallback(async (email) => {
+    try {
+      const response = await fetch(api('/api/auth/forgot-password/question'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return { success: true, question: data.question };
+      }
+      return { success: false, message: data.message || 'Error fetching question' };
+    } catch (error) {
+      return { success: false, message: 'Server error' };
+    }
+  }, []);
+
+  const verifyAnswer = useCallback(async (email, answer) => {
+    try {
+      const response = await fetch(api('/api/auth/forgot-password/verify-answer'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, answer }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return { success: true, resetToken: data.resetToken };
+      }
+      return { success: false, message: data.message || 'Incorrect answer' };
+    } catch (error) {
+      return { success: false, message: 'Server error' };
+    }
+  }, []);
+
+  const resetPasswordSec = useCallback(async (resetToken, password) => {
+    try {
+      const response = await fetch(api('/api/auth/forgot-password/reset'), {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ resetToken, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        return { success: true };
+      }
+      return { success: false, message: data.message || 'Reset failed' };
+    } catch (error) {
+      return { success: false, message: 'Server error' };
     }
   }, []);
 
@@ -119,6 +172,34 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(updatedUser));
   }, [user]);
 
+  const resendVerificationEmail = useCallback(async () => {
+    try {
+      if (!user || !user.token) {
+        return { success: false, message: 'Not authenticated' };
+      }
+
+      const response = await fetch(api('/api/auth/resend-verification'), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}`
+        }
+      });
+      
+      const data = await response.json();
+      
+      if (response.ok) {
+        return { success: true, message: data.message || 'Verification email sent!' };
+      }
+      
+      return { success: false, message: data.message || 'Failed to send verification email' };
+    } catch (error) {
+      console.error('Resend verification error:', error);
+      return { success: false, message: 'Server error. Please try again.' };
+    }
+  }, [user]);
+
+
   useInactivityLogout(logout, 10 * 60 * 1000, !!user);
 
   const value = useMemo(() => ({
@@ -126,11 +207,15 @@ export const AuthProvider = ({ children }) => {
     loading,
     login,
     signup,
-    verifyEmail,
+    verifyEmailByToken,
+    fetchSecurityQuestion,
+    verifyAnswer,
+    resetPasswordSec,
     logout,
     updateProfile,
+    resendVerificationEmail,
     isAuthenticated: !!user
-  }), [user, loading, login, signup, verifyEmail, logout, updateProfile]);
+  }), [user, loading, login, signup, verifyEmailByToken, fetchSecurityQuestion, verifyAnswer, resetPasswordSec, logout, updateProfile, resendVerificationEmail]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
