@@ -336,20 +336,168 @@
 }
 
 @media (max-width: 768px) {
+  .profile-page {
+    padding: 1rem 0;
+  }
+
+  .profile-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 0.75rem;
+  }
+
+  /* Compact Mobile Sidebar */
+  .account-nav-card {
+    margin-bottom: 1rem;
+  }
+
+  .account-brief {
+    padding: 1rem;
+  }
+
+  .business-avatar {
+    width: 48px;
+    height: 48px;
+  }
+
+  .brief-info h3 {
+    font-size: 1rem;
+  }
+
+  .account-type {
+    font-size: 0.7rem;
+  }
+
+  .account-email {
+    font-size: 0.75rem;
+  }
+
+  .account-menu {
+    padding: 0.5rem 0;
+  }
+
+  .menu-link {
+    padding: 0.875rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .menu-link.active {
+    padding-left: calc(1rem - 3px);
+  }
+
+  .account-quick-stats {
+    padding: 1rem;
+  }
+
+  .q-val {
+    font-size: 1.25rem;
+  }
+
+  .q-lab {
+    font-size: 0.65rem;
+  }
+
+  .support-card-mini {
+    padding: 1rem;
+  }
+
+  /* Mobile Content Sections */
+  .profile-section {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 8px;
+  }
+
+  .section-header-compact {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  .h-text h2 {
+    font-size: 1.125rem;
+  }
+
+  .h-text p {
+    font-size: 0.8125rem;
+  }
+
+  /* Mobile Order Cards */
+  .recent-orders-list {
+    gap: 0.75rem;
+  }
+
+  .procurement-item {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .procurement-item:hover {
+    transform: none;
+  }
+
+  .proc-main {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .ref {
+    font-size: 0.875rem;
+  }
+
+  .date {
+    font-size: 0.75rem;
+  }
+
+  .proc-amount {
+    text-align: left;
+    font-size: 1.125rem;
+  }
+
+  /* Mobile Forms */
   .form-grid {
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
+  }
+
+  .input-wrapper input {
+    padding: 0.875rem 0.875rem 0.875rem 38px;
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+  }
+
+  .form-actions button {
+    width: 100%;
+    min-height: 44px;
   }
 }
-@media (max-width: 968px) {
-  .profile-layout { grid-template-columns: 1fr; }
-  .proc-main { grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .proc-amount { text-align: left; }
-  .proc-action { display: none; }
-}
 
-@media (max-width: 640px) {
-  .profile-page { padding: 1.5rem 0.5rem; }
-  .profile-section { padding: 1.25rem; }
-  .proc-main { grid-template-columns: 1fr; }
+@media (max-width: 480px) {
+  .profile-page {
+    padding: 0.75rem 0;
+  }
+
+  .profile-layout {
+    padding: 0 0.5rem;
+  }
+
+  .profile-section {
+    padding: 0.875rem;
+  }
+
+  .h-text h2 {
+    font-size: 1rem;
+  }
+
+  .procurement-item {
+    padding: 0.875rem;
+  }
 }

@@ -447,11 +447,206 @@
   margin-bottom: 0;
 }
 
-@media (max-width: 900px) {
-  .order-details-layout {
-    grid-template-columns: 1fr;
+@media (max-width: 768px) {
+  .order-details-page {
+    padding: 1rem 0;
   }
+
+  /* Mobile Stepper */
+  .order-stepper {
+    padding: 0 0.75rem;
+    margin: 1rem auto 1.5rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .order-stepper::before {
     display: none;
+  }
+
+  .step-item {
+    width: 70px;
+    min-width: 70px;
+  }
+
+  .step-circle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .step-item span {
+    font-size: 0.625rem;
+  }
+
+  /* Mobile Layout */
+  .order-details-layout {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 0.75rem;
+  }
+
+  .order-header {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+  }
+
+  .order-section {
+    margin-bottom: 1rem;
+  }
+
+  .order-section h3 {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Mobile Info Grid */
+  .info-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 1rem;
+  }
+
+  .info-full {
+    grid-column: span 1;
+  }
+
+  /* Mobile Order Items */
+  .order-items {
+    gap: 0.75rem;
+  }
+
+  .order-item {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.875rem;
+  }
+
+  .item-name {
+    font-size: 0.9375rem;
+  }
+
+  .item-qty {
+    font-size: 0.75rem;
+  }
+
+  .order-total {
+    margin-top: 1rem;
+    padding-top: 0.75rem;
+    font-size: 1.125rem;
+  }
+
+  /* Mobile Sidebar */
+  .order-details-sidebar {
+    gap: 1rem;
+  }
+
+  /* Mobile Payment Info */
+  .payment-row {
+    grid-template-columns: 1fr;
+    gap: 0.25rem;
+    padding: 0.75rem 0;
+  }
+
+  .payment-row span:first-child {
+    font-size: 0.75rem;
+  }
+
+  .payment-row span:last-child {
+    font-size: 0.875rem;
+  }
+
+  .mono {
+    font-size: 0.6875rem;
+    padding: 4px 8px;
+  }
+
+  /* Mobile Proof Display */
+  .payment-proof-display {
+    padding: 0.875rem;
+  }
+
+  .proof-image {
+    max-height: 300px;
+  }
+
+  /* Mobile Verification Badge */
+  .verification-badge {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  /* Mobile Rejection Details */
+  .rejection-details {
+    padding: 0.875rem;
+  }
+
+  .rejection-message {
+    font-size: 0.8125rem;
+  }
+
+  /* Mobile WhatsApp Card */
+  .whatsapp-inquiry-card {
+    margin-top: 1rem;
+  }
+
+  .inquiry-header h3 {
+    font-size: 1rem;
+  }
+
+  .whatsapp-inquiry-card p {
+    font-size: 0.875rem;
+  }
+
+  .whatsapp-inquiry-card button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  /* Mobile Badge */
+  .badge {
+    padding: 4px 10px;
+    font-size: 0.625rem;
+  }
+
+  /* Mobile Bank Details */
+  .detail-row {
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .order-details-page {
+    padding: 0.75rem 0;
+  }
+
+  .order-details-layout {
+    padding: 0 0.5rem;
+  }
+
+  .order-stepper {
+    padding: 0 0.5rem;
+  }
+
+  .step-item {
+    width: 60px;
+    min-width: 60px;
+  }
+
+  .step-circle {
+    width: 32px;
+    height: 32px;
+  }
+
+  .order-section h3 {
+    font-size: 0.9375rem;
+  }
+
+  .info-grid {
+    padding: 0.875rem;
   }
 }
