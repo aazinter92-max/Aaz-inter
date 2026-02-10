@@ -33,13 +33,21 @@
   align-items: center;
   gap: var(--spacing-sm);
   background: transparent;
-  width: 100px;
+  flex: 1; /* Allow flexible width instead of fixed 100px */
   text-align: center;
+  min-width: 60px; /* Minimum width */
+}
+
+@media (min-width: 640px) {
+  .step-item {
+    width: 100px; /* Restore fixed width on larger screens */
+    flex: none;
+  }
 }
 
 .step-circle {
-  width: 40px;
-  height: 40px;
+  width: 32px; /* Smaller circles on mobile */
+  height: 32px;
   border-radius: 50%;
   background-color: white;
   border: 2px solid #e5e7eb;
@@ -48,6 +56,13 @@
   justify-content: center;
   color: #9ca3af;
   margin: 0 auto;
+}
+
+@media (min-width: 640px) {
+  .step-circle {
+    width: 40px;
+    height: 40px;
+  }
 }
 
 .step-item.completed .step-circle {
@@ -75,11 +90,20 @@
 }
 
 /* Grid Layout */
+/* Grid Layout */
 .confirmation-grid {
-  display: grid;
-  grid-template-columns: 1fr 350px;
-  gap: var(--spacing-2xl);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+@media (min-width: 1024px) {
+  .confirmation-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: var(--spacing-2xl);
+    align-items: start;
+  }
 }
 
 /* Success Banner */
