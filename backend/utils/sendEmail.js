@@ -19,19 +19,33 @@ const sendEmail = async (options) => {
       service: 'gmail',
       host: 'smtp.gmail.com',
       port: 465,
-      secure: true, // true for 465, false for other ports
+      secure: true, 
       auth: {
         user: process.env.SMTP_EMAIL,
         pass: process.env.SMTP_PASSWORD,
       },
       tls: {
-        rejectUnauthorized: false // Fixes some certificate issues on cloud servers
-      }
+        rejectUnauthorized: false
+      },
+      // TIMEOUT SETTINGS TO PREVENT HANGING
+      connectionTimeout: 10000, // 10 seconds
+      greetingTimeout: 5000,    // 5 seconds
+      socketTimeout: 15000      // 15 seconds
     });
 
-    // Verify connection config
-    await transporter.verify();
-    console.log('✅ SMTP Connection verified');
+    // Verify connection config (with timeout)
+    try {
+      await new Promise((resolve, reject) => {
+        transporter.verify((error, success) => {
+          if (error) reject(error);
+          else resolve(success);
+        });
+      });
+      console.log('✅ SMTP Connection verified');
+    } catch (err) {
+      console.error('❌ SMTP Connection Failed:', err.message);
+      return; // Return early if connection fails
+    }
 
     const message = {
       from: process.env.FROM_EMAIL || `AAZ International <${process.env.SMTP_EMAIL}>`,
@@ -48,10 +62,7 @@ const sendEmail = async (options) => {
 
   } catch (error) {
     console.error('❌ Email sending failed:', error.message);
-    // Log full error for debugging
-    if (error.response) console.error('SMTP Response:', error.response);
-    
-    // Don't throw - allow registration to proceed
+    // Don't throw - allow registration/request to proceed
   }
 };
 
