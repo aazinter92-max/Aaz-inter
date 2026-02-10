@@ -1,42 +1,26 @@
-const { Resend } = require('resend');
+const nodemailer = require('nodemailer');
 
-// Initialize Resend with API key
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-/**
- * Send email using Resend API
- * @param {Object} options - Email options
- * @param {string} options.to - Recipient email
- * @param {string} options.subject - Email subject
- * @param {string} options.html - HTML content
- * @returns {Promise<Object>} - Resend response
- */
-const sendEmail = async ({ to, subject, html }) => {
-  try {
-    if (!process.env.RESEND_API_KEY) {
-      throw new Error('RESEND_API_KEY is not configured');
+const sendEmail = async (options) => {
+  const transporter = nodemailer.createTransport({
+    host: 'smtp.resend.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: 'resend',
+      pass: process.env.SMTP_PASSWORD || process.env.RESEND_API_KEY
     }
+  });
 
-    const { data, error } = await resend.emails.send({
-      // TEMPORARY: Using default Resend email until aaz-international.com DNS is verified
-      // TODO: Switch to 'AAZ International <noreply@aaz-international.com>' after domain verification
-      from: 'AAZ International <onboarding@resend.dev>',
-      to: [to],
-      subject: subject,
-      html: html,
-    });
+  const message = {
+    from: process.env.FROM_EMAIL || 'AAZ International <onboarding@resend.dev>',
+    to: options.email,
+    subject: options.subject,
+    text: options.message,
+    html: options.html
+  };
 
-    if (error) {
-      console.error('❌ Resend Email Error:', error);
-      throw error;
-    }
-
-    console.log('✅ Email sent successfully via Resend:', data.id);
-    return { success: true, id: data.id };
-  } catch (error) {
-    console.error('❌ Failed to send email via Resend:', error.message);
-    throw error;
-  }
+  const info = await transporter.sendMail(message);
+  console.log('Message sent via Resend: %s', info.messageId);
 };
 
 module.exports = sendEmail;
