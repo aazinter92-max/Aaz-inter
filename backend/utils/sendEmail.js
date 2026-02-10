@@ -14,12 +14,14 @@ const sendEmail = async (options) => {
       throw new Error('SMTP credentials missing. Please check SMTP_EMAIL and SMTP_PASSWORD in .env');
     }
 
-    // Create transporter (Use Port 465 for SSL - more reliable on Railway)
+    const isSecure = process.env.SMTP_PORT == 465; // True for 465, false for 587
+
+    // Create transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       host: 'smtp.gmail.com',
-      port: 465,
-      secure: true, 
+      port: process.env.SMTP_PORT || 587,
+      secure: isSecure, 
       auth: {
         user: process.env.SMTP_EMAIL,
         pass: process.env.SMTP_PASSWORD,
