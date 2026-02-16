@@ -505,8 +505,9 @@
 
   .mobile-toggle-modern {
     display: flex;
-    min-width: 44px;
-    min-height: 44px;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
   }
 
   .mobile-overlay,
@@ -515,44 +516,57 @@
   }
 
   .logo-image {
-    height: 36px;
-    width: 36px;
-    padding: 4px;
+    height: 34px;
+    width: 34px;
+    padding: 3px;
   }
 
   .nav-main-content {
-    gap: 12px;
+    gap: 8px;
+    padding: 0 4px;
   }
 
   .header-nav-main {
-    padding: 10px 0;
+    padding: 8px 0;
   }
 
   .cart-btn-modern {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
+    width: 42px;
+    height: 42px;
+    border-radius: 8px;
   }
 
   .user-btn-modern,
   .login-btn-modern {
-    padding: 6px 12px;
+    padding: 6px 10px;
     font-size: 13px;
-    min-height: 44px;
+    min-height: 42px;
+    border-radius: 8px;
+    border-width: 1px;
+    gap: 4px;
   }
 
-  .user-btn-modern span {
+  .user-btn-modern span,
+  .login-btn-modern span {
     display: none;
+  }
+
+  .user-dropdown-icon {
+    display: none;
+  }
+
+  .nav-actions-modern {
+    gap: 8px;
   }
 }
 
 @media (max-width: 480px) {
   .logo-image {
-    height: 32px;
-    width: 32px;
+    height: 30px;
+    width: 30px;
   }
 
   .nav-actions-modern {
-    gap: 10px;
+    gap: 6px;
   }
 }
