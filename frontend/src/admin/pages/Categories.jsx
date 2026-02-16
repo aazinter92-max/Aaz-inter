@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Tag } from 'lucide-react';
 import { api } from '../../config/api';
+import '../styles/Categories.css';
+
 const Categories = () => {
   const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({ name: '', description: '' });
@@ -71,13 +73,13 @@ const Categories = () => {
   };
 
   return (
-    <div>
+    <div className="categories-page">
       <h1 className="page-title">Category Management</h1>
       
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(300px, 1fr) 2fr', gap: '2rem', alignItems: 'start' }}>
+      <div className="categories-layout">
         
         {/* Form Card */}
-        <div className="table-container" style={{ padding: '2rem', position: 'sticky', top: '2rem' }}>
+        <div className="table-container category-form-container">
           <h2 className="section-title" style={{ fontSize: '1.25rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center' }}>
             <Tag size={20} className="mr-2 text-primary" style={{ marginRight: '0.5rem', color: 'var(--admin-primary)' }} />
             {editingId ? 'Edit Category' : 'Create Category'}
@@ -128,7 +130,7 @@ const Categories = () => {
         </div>
 
         {/* List Card */}
-        <div className="table-container">
+        <div className="table-container category-list-container">
           <table className="admin-table">
             <thead>
               <tr>
