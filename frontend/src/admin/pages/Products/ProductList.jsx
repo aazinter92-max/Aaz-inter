@@ -8,6 +8,7 @@ import {
   Package,
   CheckCircle,
   XCircle,
+  Star,
 } from "lucide-react";
 import { api, API_URL } from "../../../config/api";
 import { getAssetUrl } from "../../../utils/helpers";
@@ -149,8 +150,18 @@ const ProductList = () => {
                   </div>
                 </td>
                 <td>
-                  <div style={{ fontWeight: 600, color: "#0f172a" }}>
-                    {product.name}
+                  <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <div style={{ fontWeight: 600, color: "#0f172a" }}>
+                      {product.name}
+                    </div>
+                    {product.isFeatured && (
+                      <Star
+                        size={14}
+                        fill="#f59e0b"
+                        color="#f59e0b"
+                        title="Featured Product"
+                      />
+                    )}
                   </div>
                   <div className="text-muted" style={{ fontSize: "0.8rem" }}>
                     ID: {product._id.substring(20, 24)}

@@ -42,6 +42,11 @@ const ProductCard = memo(({ product }) => {
             (e.target.src = "https://via.placeholder.com/300?text=No+Image")
           }
         />
+        {product.isFeatured && (
+          <span className="product-badge product-badge-warning" style={{ top: '35px', background: '#f59e0b' }}>
+            Featured
+          </span>
+        )}
         {hasStock ? (
           <span className="product-badge product-badge-success">In Stock</span>
         ) : (

@@ -8,26 +8,21 @@ import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [productsRes, categoriesRes] = await Promise.all([
-          cachedFetch(api('/api/products')),
-          cachedFetch(api('/api/categories'))
-        ]);
-        const [productsData, categoriesData] = await Promise.all([
-          productsRes.json(),
-          categoriesRes.json()
-        ]);
-        setProducts(productsData);
-        setCategories(categoriesData);
+        setLoading(true);
+        // Fetch 8 latest products (regardless of featured status)
+        // This ensures every new product added appears at the top immediately
+        const res = await cachedFetch(api('/api/products?limit=8&sort=latest'));
+        const data = await res.json();
+        setFeaturedProducts(Array.isArray(data) ? data : []);
       } catch (error) {
-        // Error handled silently
+        console.error("Home data fetch error:", error);
       } finally {
         setLoading(false);
       }
@@ -39,10 +34,6 @@ const Home = () => {
     e.preventDefault();
     navigate(searchQuery.trim() ? `/products?search=${encodeURIComponent(searchQuery.trim())}` : '/products');
   };
-
-  const getProductsByCategory = useMemo(() => (categoryId) => {
-    return products.filter(p => p.category?._id === categoryId).slice(0, 4);
-  }, [products]);
 
   const featuredBoxes = useMemo(() => [
     { color: 'blue', title: 'Hospital Equipment', subtitle: 'at One Place', discount: 'UP TO 50% OFF', icon: <Package size={40} /> },
@@ -105,23 +96,32 @@ const Home = () => {
         </div>
       </section>
 
-      {categories.slice(0, 2).map((category) => {
-        const categoryProducts = getProductsByCategory(category._id);
-        if (categoryProducts.length === 0) return null;
-        return (
-          <section key={category._id} className="category-section">
-            <div className="container">
-              <div className="category-section-header">
-                <div><h2 className="category-section-title">{category.name}</h2></div>
-                <Button variant="outline" icon={<ArrowRight size={18} />} onClick={() => navigate(`/products?category=${category._id}`)}>View All</Button>
+      {/* Featured/Latest Products Section */}
+      {featuredProducts.length > 0 && (
+        <section className="category-section">
+          <div className="container">
+            <div className="category-section-header">
+              <div>
+                <h2 className="category-section-title">Our Collection</h2>
+                <p className="text-muted">High-quality medical equipment selected for you</p>
               </div>
-              <div className="category-products-grid">
-                {categoryProducts.map((product) => <ProductCard key={product._id} product={product} />)}
-              </div>
+              <Button 
+                variant="outline" 
+                icon={<ArrowRight size={18} />} 
+                onClick={() => navigate('/products')}
+              >
+                Explore All
+              </Button>
             </div>
-          </section>
-        );
-      })}
+            <div className="category-products-grid">
+              {featuredProducts.map((product) => (
+                <ProductCard key={product._id} product={product} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
 
       <section className="why-choose-section">
         <div className="container">

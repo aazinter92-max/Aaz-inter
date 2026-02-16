@@ -8,9 +8,11 @@ import {
   DollarSign,
   Archive,
   Tag,
+  Star,
 } from "lucide-react";
 import { api, API_URL } from "../../../config/api";
 import { getAssetUrl } from "../../../utils/helpers";
+
 const ProductForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,6 +25,7 @@ const ProductForm = () => {
     image: "",
     category: "",
     stock: "",
+    isFeatured: false,
   });
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -67,6 +70,7 @@ const ProductForm = () => {
         image: data.image || "",
         category: data.category?._id || data.category || "",
         stock: data.stock || "",
+        isFeatured: data.isFeatured || false,
       });
     } catch (err) {
       console.error(err);
@@ -75,7 +79,11 @@ const ProductForm = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type, checked } = e.target;
+    setFormData({
+      ...formData,
+      [name]: type === "checkbox" ? checked : value,
+    });
   };
 
   const handleUploadFile = async (e) => {
@@ -199,6 +207,26 @@ const ProductForm = () => {
           className="table-container"
           style={{ padding: "2rem", height: "fit-content" }}
         >
+          {/* SIMPLIFIED FEATURED TOGGLE */}
+          <div className="mb-4" style={{ paddingBottom: '1rem', borderBottom: '1px solid #f1f5f9' }}>
+             <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer', gap: '0.75rem' }}>
+                <input 
+                  type="checkbox" 
+                  name="isFeatured" 
+                  checked={formData.isFeatured} 
+                  onChange={handleChange} 
+                  style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                   <Star size={16} fill={formData.isFeatured ? "#f59e0b" : "none"} color={formData.isFeatured ? "#f59e0b" : "#94a3b8"} />
+                   <span style={{ fontWeight: 600, color: 'var(--admin-text-main)' }}>Feature on Homepage</span>
+                </div>
+             </label>
+             <p className="text-muted" style={{ fontSize: '0.8rem', marginTop: '0.25rem' }}>
+                Promotion will appear in the home page collection.
+             </p>
+          </div>
+
           {error && (
             <div
               style={{
@@ -261,6 +289,8 @@ const ProductForm = () => {
 
         {/* Side Info */}
         <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+          {/* Side Column Starts */}
+
           {/* Pricing & Stock */}
           <div className="table-container" style={{ padding: "2rem" }}>
             <h3 className="section-title" style={{ fontSize: "1rem" }}>
@@ -405,7 +435,7 @@ const ProductForm = () => {
                     marginBottom: "1rem",
                   }}
                 >
-                   <img
+                  <img
                     src={getAssetUrl(formData.image, API_URL)}
                     alt="Preview"
                     style={{
@@ -443,10 +473,7 @@ const ProductForm = () => {
                     background: "#f8fafc",
                   }}
                 >
-                  <div
-                    className="text-muted"
-                    style={{ marginBottom: "0.5rem" }}
-                  >
+                  <div className="text-muted" style={{ marginBottom: "0.5rem" }}>
                     No image selected
                   </div>
                 </div>

@@ -5,7 +5,32 @@ const Product = require('../models/Product');
 // @access  Public
 const getProducts = async (req, res, next) => {
   try {
-    const products = await Product.find({ isActive: true }).populate('category', 'name');
+    const { featured, limit, sort, category } = req.query;
+    let query = { isActive: true };
+    
+    if (featured === 'true') {
+      query.isFeatured = true;
+    }
+
+    if (category) {
+      query.category = category;
+    }
+    
+    let productsQuery = Product.find(query).populate('category', 'name');
+    
+    // Default sorting for homepage fallback/latest
+    if (sort === 'latest') {
+       productsQuery = productsQuery.sort({ createdAt: -1 });
+    } else {
+       // Regular default sorting
+       productsQuery = productsQuery.sort({ createdAt: -1 });
+    }
+    
+    if (limit) {
+      productsQuery = productsQuery.limit(parseInt(limit));
+    }
+    
+    const products = await productsQuery;
     res.json(products);
   } catch (error) {
     next(error);
@@ -34,7 +59,7 @@ const getProductById = async (req, res, next) => {
 // @access  Private/Admin
 const createProduct = async (req, res, next) => {
   try {
-    const { name, description, price, stock, image, category, isActive } = req.body;
+    const { name, description, price, stock, image, category, isActive, isFeatured } = req.body;
 
     const product = new Product({
       name,
@@ -43,7 +68,8 @@ const createProduct = async (req, res, next) => {
       stock,
       image,
       category,
-      isActive: isActive === undefined ? true : isActive
+      isActive: isActive === undefined ? true : isActive,
+      isFeatured: isFeatured === undefined ? false : isFeatured
     });
 
     const createdProduct = await product.save();
@@ -63,7 +89,7 @@ const createProduct = async (req, res, next) => {
 // @access  Private/Admin
 const updateProduct = async (req, res, next) => {
   try {
-    const { name, description, price, stock, image, category, isActive } = req.body;
+    const { name, description, price, stock, image, category, isActive, isFeatured } = req.body;
 
     const product = await Product.findById(req.params.id);
 
@@ -75,6 +101,7 @@ const updateProduct = async (req, res, next) => {
       product.image = image || product.image;
       product.category = category || product.category;
       product.isActive = isActive !== undefined ? isActive : product.isActive;
+      product.isFeatured = isFeatured !== undefined ? isFeatured : product.isFeatured;
 
       const updatedProduct = await product.save();
 
