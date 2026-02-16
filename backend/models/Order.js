@@ -142,10 +142,6 @@ const orderSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
-    stockReduced: {
-      type: Boolean,
-      default: false,
-    },
   },
   { timestamps: true },
 );
