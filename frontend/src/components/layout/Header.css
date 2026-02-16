@@ -40,14 +40,15 @@
 }
 
 .logo-image {
-  height: 85px;
-  width: 85px;
+  height: 48px;
+  width: 48px;
   object-fit: contain;
   border-radius: 50%;
   background-color: #e0f7fa; /* Light Cyan/Teal Tint */
   box-shadow: 0 4px 12px rgba(0, 188, 212, 0.15); /* Colored shadow */
   border: 1px solid rgba(0, 188, 212, 0.1); /* Subtle Teal Border */
-  padding: 8px;
+  padding: 6px;
+  transition: all 0.3s ease;
 }
 
 /* Navigation Links - Modern Pills with Dropdowns */
@@ -504,6 +505,8 @@
 
   .mobile-toggle-modern {
     display: flex;
+    min-width: 44px;
+    min-height: 44px;
   }
 
   .mobile-overlay,
@@ -512,15 +515,44 @@
   }
 
   .logo-image {
-    height: 55px;
-    width: 55px;
+    height: 36px;
+    width: 36px;
+    padding: 4px;
   }
 
   .nav-main-content {
-    gap: 16px;
+    gap: 12px;
   }
 
   .header-nav-main {
-    padding: 12px 0;
+    padding: 10px 0;
+  }
+
+  .cart-btn-modern {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+  }
+
+  .user-btn-modern,
+  .login-btn-modern {
+    padding: 6px 12px;
+    font-size: 13px;
+    min-height: 44px;
+  }
+
+  .user-btn-modern span {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-image {
+    height: 32px;
+    width: 32px;
+  }
+
+  .nav-actions-modern {
+    gap: 10px;
   }
 }

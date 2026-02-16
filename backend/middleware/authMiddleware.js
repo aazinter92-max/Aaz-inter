@@ -37,11 +37,12 @@ const protect = async (req, res, next) => {
         if (!req.admin) {
           req.user = await User.findById(decoded.id).select('-password -otp -resetPasswordToken');
           
-          // Enforce email verification for regular users
-          if (req.user && !req.user.isVerified) {
-            res.status(403);
-            throw new Error('Account not verified. Please verify your email.');
-          }
+          // EMAIL VERIFICATION IS NOW OPTIONAL - Users can access all features without verifying
+          // Verification is still encouraged for account security
+          // if (req.user && !req.user.isVerified) {
+          //   res.status(403);
+          //   throw new Error('Account not verified. Please verify your email.');
+          // }
         }
 
         // If neither found, token is invalid

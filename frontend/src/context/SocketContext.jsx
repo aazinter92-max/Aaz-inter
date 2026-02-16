@@ -18,6 +18,12 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     let socketInstance;
     const connectSocket = () => {
+      // Only connect if user is on order tracking pages
+      const shouldConnect = window.location.pathname.includes('/order') || 
+                           window.location.pathname.includes('/admin');
+      
+      if (!shouldConnect) return;
+
       socketInstance = io(API_URL, {
         transports: ["websocket", "polling"],
         timeout: 5000,
@@ -40,7 +46,7 @@ export const SocketProvider = ({ children }) => {
       setSocket(socketInstance);
     };
 
-    const timer = setTimeout(connectSocket, 1000);
+    const timer = setTimeout(connectSocket, 2000);
 
     return () => {
       clearTimeout(timer);

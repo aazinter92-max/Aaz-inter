@@ -157,41 +157,102 @@
     height: auto;
   }
 
+  /* Compact image for 2-column mobile grid */
   .product-card-image {
-    padding-bottom: 75%;
+    padding-bottom: 80%; /* Slightly taller for better mobile presentation */
   }
 
+  .product-card-image img {
+    object-fit: contain; /* Better for product images on mobile */
+  }
+
+  /* Smaller badge for mobile */
+  .product-badge {
+    top: 4px;
+    right: 4px;
+    padding: 2px 6px;
+    font-size: 8px;
+  }
+
+  /* Compact content padding */
   .product-card-content {
-    padding: 12px;
+    padding: 8px;
+    gap: 3px;
   }
 
+  /* Smaller product name */
   .product-card-name {
-    font-size: 0.875rem;
+    font-size: 13px;
     min-height: auto;
+    line-height: 1.2;
+    -webkit-line-clamp: 2;
+    margin-bottom: 2px;
   }
 
+  /* Smaller SKU */
+  .product-card-sku {
+    font-size: 9px;
+  }
+
+  /* Compact description */
   .product-card-description {
-    font-size: 0.75rem;
+    font-size: 11px;
+    line-height: 1.2;
+    -webkit-line-clamp: 2;
+    margin: 2px 0;
   }
 
+  /* Compact footer */
+  .product-card-footer {
+    padding-top: 6px;
+  }
+
+  .product-card-price {
+    margin-bottom: 6px;
+  }
+
+  /* Smaller price */
+  .product-price {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* Stack buttons vertically for better mobile UX in 2-column grid */
   .product-card-actions {
-    grid-template-columns: 1fr;
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
 
   .product-card-actions .btn {
-    height: 38px;
-    font-size: 0.875rem;
-    padding: 8px 12px;
+    width: 100%;
+    height: 30px;
+    font-size: 11px;
+    padding: 6px 8px;
+    border-radius: 4px;
+  }
+
+  /* Hide "View" text, show only icon on very small cards */
+  .product-card-actions .btn span:not(.lucide) {
+    display: inline;
   }
 }
 
 @media (max-width: 480px) {
   .product-card-name {
-    font-size: 0.8125rem;
+    font-size: 12px;
+  }
+
+  .product-card-description {
+    font-size: 10px;
   }
 
   .product-price {
-    font-size: 1rem;
+    font-size: 13px;
+  }
+
+  .product-card-actions .btn {
+    font-size: 10px;
+    height: 28px;
   }
 }

@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
 import useInactivityLogout from '../hooks/useInactivityLogout';
-import { api } from '../config/api';
+import { api, cachedFetch } from '../config/api';
 const AuthContext = createContext();
 
 export const useAuth = () => {
@@ -18,34 +18,27 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const customAuthCheck = async () => {
       const storedUser = localStorage.getItem('user');
-      console.log('🔍 Auth Check: Stored user exists?', !!storedUser);
       
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
-          console.log('👤 Restoring user:', parsedUser.email);
           
-          const res = await fetch(api('/api/auth/me'), {
+          const res = await cachedFetch(api('/api/auth/me'), {
             headers: { Authorization: `Bearer ${parsedUser.token}` }
           });
           
           if (res.ok) {
-            console.log('✅ Auth check successful - User restored');
             setUser(parsedUser);
           } else {
-            console.warn('❌ Auth check failed - Token invalid or expired');
             localStorage.removeItem('user');
             localStorage.removeItem('aaz-cart');
             setUser(null);
           }
         } catch (err) {
-          console.error('❌ Auth check error:', err);
           localStorage.removeItem('user');
           localStorage.removeItem('aaz-cart');
           setUser(null);
         }
-      } else {
-        console.log('ℹ️ No stored user found');
       }
       setLoading(false);
     };
@@ -194,7 +187,6 @@ export const AuthProvider = ({ children }) => {
       
       return { success: false, message: data.message || 'Failed to send verification email' };
     } catch (error) {
-      console.error('Resend verification error:', error);
       return { success: false, message: 'Server error. Please try again.' };
     }
   }, [user]);

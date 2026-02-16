@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowRight, Search, Package, Heart, TrendingUp, Award, ShoppingBag, CheckCircle, Globe, Shield, Wrench, Headphones, TruckIcon } from 'lucide-react';
 import ProductCard from '../components/product/ProductCard';
 import Button from '../components/common/Button';
-import { api } from '../config/api';
+import { api, cachedFetch } from '../config/api';
 import './Home.css';
 
 const Home = () => {
@@ -17,8 +17,8 @@ const Home = () => {
     const fetchData = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
-          fetch(api('/api/products')),
-          fetch(api('/api/categories'))
+          cachedFetch(api('/api/products')),
+          cachedFetch(api('/api/categories'))
         ]);
         const [productsData, categoriesData] = await Promise.all([
           productsRes.json(),
@@ -27,7 +27,7 @@ const Home = () => {
         setProducts(productsData);
         setCategories(categoriesData);
       } catch (error) {
-        console.error('Error:', error);
+        // Error handled silently
       } finally {
         setLoading(false);
       }

@@ -3,7 +3,7 @@
    Vibrant Cyan Primary, Rounded, Modern
    ======================================== */
 
-/* Button Base */
+/* Button Base - Mobile First */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -18,23 +18,34 @@
   text-decoration: none;
   white-space: nowrap;
   position: relative;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   
-  /* Strict Sizing */
-  font-size: 16px;
-  padding: 12px 24px;
-  height: 48px;
-  max-width: 280px;
+  /* Mobile First Sizing */
+  font-size: 14px;
+  padding: 10px 20px;
+  height: 44px;
+  min-height: 44px;
   width: auto;
+  max-width: 100%;
+}
+
+@media (min-width: 768px) {
+  .btn {
+    font-size: 16px;
+    padding: 12px 24px;
+    height: 48px;
+    max-width: 280px;
+  }
 }
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
 
 .btn:active {
   transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .btn:focus {
@@ -42,25 +53,48 @@
   outline-offset: 2px;
 }
 
-/* Button Sizes */
+/* Button Sizes - Mobile First */
 .btn-small {
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 6px 12px;
+  font-size: 13px;
   height: 36px;
+  min-height: 36px;
   border-radius: 8px;
 }
 
+@media (min-width: 768px) {
+  .btn-small {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
 .btn-medium {
-  padding: 12px 24px;
-  font-size: 16px;
+  padding: 10px 20px;
+  font-size: 14px;
   height: 44px;
+  min-height: 44px;
+}
+
+@media (min-width: 768px) {
+  .btn-medium {
+    padding: 12px 24px;
+    font-size: 16px;
+  }
 }
 
 .btn-large {
   padding: 12px 24px;
-  font-size: 16px;
+  font-size: 15px;
   height: 48px;
+  min-height: 48px;
   border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .btn-large {
+    font-size: 16px;
+  }
 }
 
 /* Button Variants - Modern Pharmacy Style */
@@ -128,9 +162,15 @@
 
 .btn-full-width {
   width: 100%;
-  max-width: 280px;
-  margin: 0 auto; /* Center align when constrained */
-  display: flex; /* Ensure it behaves as flex container for centering content */
+  max-width: 100%;
+  display: flex;
+}
+
+@media (min-width: 768px) {
+  .btn-full-width {
+    max-width: 320px;
+    margin: 0 auto;
+  }
 }
 
 /* Button Icon */

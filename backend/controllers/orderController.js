@@ -19,11 +19,12 @@ const createOrder = async (req, res, next) => {
       paymentMethod,
     } = req.body;
 
-    // ENFORCE EMAIL VERIFICATION FOR LOGGED-IN USERS
-    if (req.user && !req.user.isVerified) {
-      res.status(403);
-      throw new Error('Please verify your email address before placing an order. Go to My Profile to resend the verification email.');
-    }
+    // EMAIL VERIFICATION IS NOW OPTIONAL - Users can place orders without verifying
+    // Verification is still encouraged for account security and order notifications
+    // if (req.user && !req.user.isVerified) {
+    //   res.status(403);
+    //   throw new Error('Please verify your email address before placing an order. Go to My Profile to resend the verification email.');
+    // }
 
     if (!cartItems || cartItems.length === 0) {
       res.status(400);

@@ -1,22 +1,49 @@
-/* Checkout Page */
+/* Checkout Page - Mobile First */
 .checkout-page {
-  padding: var(--spacing-3xl) 0;
+  padding: 32px 0;
   min-height: 70vh;
 }
 
-.checkout-title {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-gray-900);
-  margin-bottom: var(--spacing-2xl);
+@media (min-width: 768px) {
+  .checkout-page {
+    padding: 48px 0;
+  }
 }
 
-/* Checkout Layout */
+@media (min-width: 1024px) {
+  .checkout-page {
+    padding: var(--spacing-3xl) 0;
+  }
+}
+
+.checkout-title {
+  font-size: clamp(24px, 5vw, 32px);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .checkout-title {
+    margin-bottom: var(--spacing-2xl);
+  }
+}
+
+/* Checkout Layout - Mobile First (Stack) */
 .checkout-layout {
-  display: grid;
-  grid-template-columns: 1fr 400px;
-  gap: var(--spacing-2xl);
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (min-width: 1024px) {
+  .checkout-layout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: var(--spacing-2xl);
+    align-items: start;
+  }
 }
 
 /* Form Section */
@@ -28,6 +55,14 @@
 
 .form-section {
   background-color: var(--color-white);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .form-section {
+    padding: 24px;
+  }
 }
 
 .form-section-title {
@@ -39,22 +74,37 @@
   border-bottom: 2px solid var(--color-primary-light);
 }
 
+/* Form Grid - Mobile First (Stack) */
 .form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .form-grid-full {
   grid-column: 1 / -1;
 }
 
-/* Payment Methods */
+/* Payment Methods - Mobile First (Stack) */
 .payment-methods {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-md);
   margin-bottom: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .payment-methods {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .payment-option {
@@ -62,12 +112,19 @@
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-sm);
-  padding: var(--spacing-lg);
+  padding: 16px;
   border: 2px solid var(--color-gray-300);
   border-radius: var(--radius-xl);
   cursor: pointer;
   transition: all var(--transition-base);
   position: relative;
+  min-height: 100px;
+}
+
+@media (min-width: 768px) {
+  .payment-option {
+    padding: var(--spacing-lg);
+  }
 }
 
 .payment-option input[type="radio"] {
@@ -246,10 +303,18 @@
   box-shadow: 0 0 0 3px rgba(10, 116, 218, 0.1);
 }
 
+/* Stripe Elements - Mobile First */
 .elements-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-lg);
+}
+
+@media (min-width: 640px) {
+  .elements-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .payment-error-msg {
@@ -296,14 +361,30 @@
   }
 }
 
-/* Checkout Summary */
+/* Checkout Summary - Mobile First */
 .checkout-summary-wrapper {
-  position: sticky;
-  top: calc(var(--spacing-3xl) + 80px);
+  position: static;
+  order: -1;
+}
+
+@media (min-width: 1024px) {
+  .checkout-summary-wrapper {
+    position: sticky;
+    top: calc(var(--spacing-3xl) + 80px);
+    order: 0;
+  }
 }
 
 .checkout-summary {
   background-color: var(--color-gray-50);
+  padding: 20px;
+  border-radius: 12px;
+}
+
+@media (min-width: 768px) {
+  .checkout-summary {
+    padding: 24px;
+  }
 }
 
 .summary-title {
@@ -374,37 +455,18 @@
   color: var(--color-primary);
 }
 
-/* Responsive Styles */
-@media (max-width: 1024px) {
-  .checkout-layout {
-    grid-template-columns: 1fr;
+/* Responsive - Remove old media queries */
+@media (max-width: 480px) {
+  .payment-option {
+    padding: 14px;
+    min-height: 90px;
   }
-
-  .checkout-summary-wrapper {
-    position: static;
-    order: -1;
-  }
-}
-
-@media (max-width: 768px) {
-  .checkout-page {
-    padding: var(--spacing-xl) 0;
-  }
-
-  .checkout-title {
-    font-size: var(--font-size-2xl);
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .payment-methods {
-    grid-template-columns: 1fr;
+  
+  .accepted-cards {
+    flex-wrap: wrap;
+    justify-content: center;
   }
 }
-
-/* Bank Transfer Details Section */
 .bank-transfer-section {
   margin-top: var(--spacing-xl);
   padding: var(--spacing-xl);

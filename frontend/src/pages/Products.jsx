@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { Filter } from 'lucide-react';
 import ProductCard from '../components/product/ProductCard';
 import Button from '../components/common/Button';
-import { api } from '../config/api';
+import { api, cachedFetch } from '../config/api';
 import './Products.css';
 
 const Products = () => {
@@ -22,8 +22,8 @@ const Products = () => {
     const fetchData = async () => {
       try {
         const [productsRes, categoriesRes] = await Promise.all([
-          fetch(api('/api/products')),
-          fetch(api('/api/categories'))
+          cachedFetch(api('/api/products')),
+          cachedFetch(api('/api/categories'))
         ]);
         const [productsData, categoriesData] = await Promise.all([
           productsRes.json(),
@@ -32,7 +32,7 @@ const Products = () => {
         setProducts(productsData);
         setCategories(categoriesData);
       } catch (error) {
-        console.error('Error:', error);
+        // Error handled silently
       } finally {
         setLoading(false);
       }

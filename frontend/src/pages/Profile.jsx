@@ -228,28 +228,28 @@ const Profile = () => {
                 <div className="section-header-compact">
                   <div className="h-text">
                     <h2>Email Verification</h2>
-                    <p>Verify your email to place orders and access all features</p>
+                    <p>Verify your email to secure your account and receive important notifications</p>
                   </div>
                 </div>
 
                 <div className="verification-alert" style={{
-                  background: '#FFF3CD',
-                  border: '1px solid #FFC107',
+                  background: '#D1ECF1',
+                  border: '1px solid #17A2B8',
                   borderRadius: '8px',
                   padding: '20px',
                   marginBottom: '20px'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'start', gap: '12px' }}>
-                    <Mail size={24} style={{ color: '#856404', flexShrink: 0, marginTop: '2px' }} />
+                    <Mail size={24} style={{ color: '#0C5460', flexShrink: 0, marginTop: '2px' }} />
                     <div style={{ flex: 1 }}>
-                      <h4 style={{ margin: '0 0 8px 0', color: '#856404', fontSize: '16px', fontWeight: '600' }}>
-                        Email Not Verified
+                      <h4 style={{ margin: '0 0 8px 0', color: '#0C5460', fontSize: '16px', fontWeight: '600' }}>
+                        Verify Your Email (Recommended)
                       </h4>
-                      <p style={{ margin: '0 0 12px 0', color: '#856404', fontSize: '14px', lineHeight: '1.5' }}>
+                      <p style={{ margin: '0 0 12px 0', color: '#0C5460', fontSize: '14px', lineHeight: '1.5' }}>
                         Your email address <strong>{user.email}</strong> has not been verified yet. 
-                        You must verify your email before you can place orders.
+                        While you can still place orders, verifying your email helps secure your account and ensures you receive important order notifications.
                       </p>
-                      <p style={{ margin: '0 0 16px 0', color: '#856404', fontSize: '14px' }}>
+                      <p style={{ margin: '0 0 16px 0', color: '#0C5460', fontSize: '14px' }}>
                         Check your inbox for the verification email or click below to resend it.
                       </p>
                       <Button 

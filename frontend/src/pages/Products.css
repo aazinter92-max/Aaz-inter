@@ -349,9 +349,12 @@
     justify-content: center;
   }
 
+  /* PROFESSIONAL 2-COLUMN MOBILE GRID LAYOUT */
   .products-grid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 10px;
   }
 }
 

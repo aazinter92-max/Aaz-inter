@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { Link, NavLink } from "react-router-dom";
 import {
   ShoppingCart,
@@ -14,76 +14,74 @@ import {
 import { useCart } from "../../context/CartContext";
 import { useAuth } from "../../context/AuthContext";
 import { sendWhatsAppMessage, whatsappMessages } from "../../utils/helpers";
-import { api } from '../../config/api';
+import { api, cachedFetch } from '../../config/api';
 import "./Header.css";
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [categories, setCategories] = useState([]); // Dynamic categories
+  const [categories, setCategories] = useState([]);
   const dropdownTimeoutRef = useRef(null);
 
   const { getCartCount } = useCart();
   const { user, logout } = useAuth();
   const cartCount = getCartCount();
 
-  // Fetch categories for dropdown
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(api("/api/categories"));
+        const res = await cachedFetch(api("/api/categories"));
         const data = await res.json();
         setCategories(data);
       } catch (err) {
-        console.error("Failed to fetch categories for menu", err);
+        // Error handled silently
       }
     };
     fetchCategories();
   }, []);
 
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     logout();
     setShowUserMenu(false);
-  };
+  }, [logout]);
 
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
+  const toggleMobileMenu = useCallback(() => {
+    setMobileMenuOpen(prev => !prev);
+  }, []);
 
-  const closeMobileMenu = () => {
+  const closeMobileMenu = useCallback(() => {
     setMobileMenuOpen(false);
     setActiveDropdown(null);
-  };
+  }, []);
 
-  const handleWhatsAppClick = () => {
+  const handleWhatsAppClick = useCallback(() => {
     sendWhatsAppMessage(whatsappMessages.generalInquiry());
-  };
+  }, []);
 
-  const toggleDropdown = (menuName) => {
-    setActiveDropdown(activeDropdown === menuName ? null : menuName);
-  };
+  const toggleDropdown = useCallback((menuName) => {
+    setActiveDropdown(prev => prev === menuName ? null : menuName);
+  }, []);
 
-  // Professional dropdown handlers with delay
-  const handleDropdownEnter = (menuName) => {
+  const handleDropdownEnter = useCallback((menuName) => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
     setActiveDropdown(menuName);
-  };
+  }, []);
 
-  const handleDropdownLeave = () => {
+  const handleDropdownLeave = useCallback(() => {
     dropdownTimeoutRef.current = setTimeout(() => {
       setActiveDropdown(null);
-    }, 300); // 300ms delay before closing
-  };
+    }, 300);
+  }, []);
 
-  const handleDropdownStay = () => {
+  const handleDropdownStay = useCallback(() => {
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
     }
-  };
+  }, []);
 
-  const navigation = [
+  const navigation = useMemo(() => [
     {
       name: "Home",
       path: "/",
@@ -134,7 +132,7 @@ const Header = () => {
       path: "/blog",
       dropdown: false,
     },
-  ];
+  ], [categories]);
   return (
     <header className="header-modern">
       {/* Main Navigation */}
