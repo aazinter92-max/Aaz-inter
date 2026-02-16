@@ -10,6 +10,7 @@ import {
   Tag,
 } from "lucide-react";
 import { api, API_URL } from "../../../config/api";
+import { getAssetUrl } from "../../../utils/helpers";
 const ProductForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -105,16 +106,8 @@ const ProductForm = () => {
       const data = await res.json();
 
       if (res.ok) {
-        // Convert relative path to full URL
-        let imageUrl = data.image;
-        if (!imageUrl.startsWith("http")) {
-          const normalizedSrc = imageUrl.replace(/\\/g, "/");
-          const cleanPath = normalizedSrc.startsWith("/")
-            ? normalizedSrc
-            : `/${normalizedSrc}`;
-          imageUrl = `${API_URL}${cleanPath}`;
-        }
-
+        // Convert relative path to full URL using helper
+        const imageUrl = getAssetUrl(data.image, API_URL);
         setFormData((prev) => ({ ...prev, image: imageUrl }));
       } else {
         alert(data.message || data.error || "Upload failed");
@@ -412,8 +405,8 @@ const ProductForm = () => {
                     marginBottom: "1rem",
                   }}
                 >
-                  <img
-                    src={formData.image}
+                   <img
+                    src={getAssetUrl(formData.image, API_URL)}
                     alt="Preview"
                     style={{
                       width: "100%",

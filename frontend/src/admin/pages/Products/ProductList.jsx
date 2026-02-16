@@ -10,6 +10,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { api, API_URL } from "../../../config/api";
+import { getAssetUrl } from "../../../utils/helpers";
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -63,17 +64,10 @@ const ProductList = () => {
 
   // Helper function to get full image URL
   const getImageUrl = (imagePath) => {
-    if (!imagePath) return "https://via.placeholder.com/48?text=No+Img";
-    if (imagePath.startsWith("http")) return imagePath;
-    if (imagePath.startsWith("/uploads") || imagePath.startsWith("uploads/")) {
-      const normalizedSrc = imagePath.replace(/\\/g, "/");
-      const cleanPath = normalizedSrc.startsWith("/")
-        ? normalizedSrc
-        : `/${normalizedSrc}`;
-      const baseUrl = API_URL;
-      return `${baseUrl}${cleanPath}`;
-    }
-    return imagePath;
+    return (
+      getAssetUrl(imagePath, API_URL) ||
+      "https://via.placeholder.com/48?text=No+Img"
+    );
   };
 
   const filteredProducts = products.filter(
