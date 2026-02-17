@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useSocket } from '../context/SocketContext';
-import { User, Mail, LogOut, Save, Package, ShoppingCart, ArrowRight, Building, Phone, MapPin, ShieldCheck } from 'lucide-react';
+import { User, Mail, LogOut, Save, Package, ShoppingCart, ArrowRight, Building, Phone, MapPin, ShieldCheck, Copy, CheckCircle } from 'lucide-react';
 import Button from '../components/common/Button';
 import { api } from '../config/api';
 import './Profile.css';
@@ -39,6 +39,7 @@ const Profile = () => {
   const [secret, setSecret] = useState('');
   const [otpToken, setOtpToken] = useState('');
   const [twoFactorLoading, setTwoFactorLoading] = useState(false);
+  const [copiedKey, setCopiedKey] = useState(false);
 
   // Fetch order data
   useEffect(() => {
@@ -106,6 +107,12 @@ const Profile = () => {
     } else {
       setVerificationMessage('❌ ' + result.message);
     }
+  };
+
+  const copyKeyToClipboard = () => {
+    navigator.clipboard.writeText(secret);
+    setCopiedKey(true);
+    setTimeout(() => setCopiedKey(false), 2000);
   };
 
   const handleToggle2FA = async () => {
@@ -443,30 +450,54 @@ const Profile = () => {
                 </div>
                 <div className="security-card-body">
                   {!user.twoFactorEnabled && isSettingUp2FA && qrCode && (
-                    <div className="tfa-setup">
-                      <h4>Scan QR Code</h4>
-                      <p>Scan this with your authenticator app using  your email <strong>{user.email}</strong></p>
-                      <div className="qr-code-container">
-                        <img src={qrCode} alt="2FA QR Code" />
+                    <div className="tfa-setup animate-fade-in">
+                      <div className="tfa-setup-header">
+                        <h4>Configure Authenticator</h4>
+                        <p>Scan the QR code or enter the key manually in your authenticator app (Google Authenticator, Authy, etc.)</p>
                       </div>
-                      <div className="otp-input-container">
-                        <label>Enter 6-Digit Code:</label>
-                        <input 
-                          type="text" 
-                          maxLength="6"
-                          className="otp-input"
-                          placeholder="000000"
-                          value={otpToken}
-                          onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ''))}
-                        />
+
+                      <div className="qr-section-modern">
+                        <div className="qr-code-container">
+                          <img src={qrCode} alt="2FA QR Code" />
+                        </div>
+                        
+                        <div className="manual-entry-section">
+                          <span className="manual-label">Can't scan the QR code?</span>
+                          <p className="manual-desc">Enter this key manually in your app:</p>
+                          <div className="manual-key-box" onClick={copyKeyToClipboard}>
+                            <code className="manual-key-text">{secret}</code>
+                            <button className="copy-key-btn" title="Copy Key">
+                              {copiedKey ? <CheckCircle size={16} color="#10b981" /> : <Copy size={16} />}
+                            </button>
+                            {copiedKey && <span className="copy-tooltip">Copied!</span>}
+                          </div>
+                        </div>
                       </div>
-                      <div className="tfa-actions">
-                        <Button variant="primary" onClick={handleVerify2FA} loading={twoFactorLoading}>
-                          Confirm & Enable
-                        </Button>
-                        <Button variant="outline" onClick={() => { setIsSettingUp2FA(false); setQrCode(''); }}>
-                          Cancel
-                        </Button>
+
+                      <div className="otp-verification-section">
+                        <div className="otp-input-container">
+                          <label>Enter 6-Digit Verification Code:</label>
+                          <div className="otp-input-wrapper">
+                            <input 
+                              type="text" 
+                              maxLength="6"
+                              className="otp-input"
+                              placeholder="000 000"
+                              value={otpToken}
+                              onChange={(e) => setOtpToken(e.target.value.replace(/\D/g, ''))}
+                            />
+                            {verificationMessage && <span className="otp-error">{verificationMessage}</span>}
+                          </div>
+                        </div>
+
+                        <div className="tfa-actions">
+                          <Button variant="primary" onClick={handleVerify2FA} loading={twoFactorLoading} fullWidth>
+                            Confirm & Enable 2FA
+                          </Button>
+                          <Button variant="outline" onClick={() => { setIsSettingUp2FA(false); setQrCode(''); setVerificationMessage(''); }} fullWidth>
+                            Cancel Setup
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   )}
