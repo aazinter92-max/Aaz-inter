@@ -52,6 +52,7 @@ const paymentRoutes = require("./routes/paymentRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const wishlistRoutes = require("./routes/wishlistRoutes");
 const contactRoutes = require("./routes/contactRoutes");
+const complaintRoutes = require("./routes/complaintRoutes");
 
 // Connect to database
 connectDB();
@@ -176,6 +177,7 @@ app.use("/api/reviews", reviewRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/complaints", complaintRoutes);
 
 // Debug Routes
 const debugRoutes = require("./routes/debugRoutes");

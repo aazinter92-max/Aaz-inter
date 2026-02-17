@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Phone, Mail, MapPin, MessageCircle, Clock, Send, ShieldCheck } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
 import { sendWhatsAppMessage, whatsappMessages, isValidEmail } from '../utils/helpers';
 import Input from '../components/common/Input';
 import Button from '../components/common/Button';
@@ -8,6 +9,7 @@ import { api } from '../config/api';
 import './Contact.css';
 
 const Contact = () => {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -48,10 +50,13 @@ const Contact = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(api('/api/contact'), {
+      const response = await fetch(api('/api/complaints'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          ...formData,
+          userId: user?._id || null
+        }),
       });
 
       const data = await response.json();

@@ -9,6 +9,7 @@ import {
   Tags,
   CheckCircle,
   X,
+  MessageSquare,
 } from "lucide-react";
 import { useAdminAuth } from "../../context/AdminAuth";
 import { useSocket } from "../../../context/SocketContext";
@@ -20,12 +21,14 @@ const Sidebar = ({ isOpen, onClose }) => {
   const { socket } = useSocket();
   const [pendingOrders, setPendingOrders] = useState(0);
   const [pendingPayments, setPendingPayments] = useState(0);
+  const [pendingComplaints, setPendingComplaints] = useState(0);
 
   const isActive = (path) => location.pathname.startsWith(path);
 
   useEffect(() => {
     fetchPendingCount();
     fetchPendingPayments();
+    fetchPendingComplaints();
 
     if (socket) {
       const handleNewOrder = () => setPendingOrders((prev) => prev + 1);
@@ -77,6 +80,21 @@ const Sidebar = ({ isOpen, onClose }) => {
     }
   };
 
+  const fetchPendingComplaints = async () => {
+    try {
+      const token = localStorage.getItem("adminToken");
+      const res = await fetch(api("/api/complaints"), {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        setPendingComplaints(data.filter(c => c.status === 'pending').length);
+      }
+    } catch (err) {
+      console.error("Error fetching pending complaints:", err);
+    }
+  };
+
   const navItems = [
     {
       name: "Dashboard",
@@ -98,6 +116,7 @@ const Sidebar = ({ isOpen, onClose }) => {
     },
     { name: "Categories", path: "/admin/categories", icon: <Tags size={20} /> },
     { name: "Customers", path: "/admin/customers", icon: <Users size={20} /> },
+    { name: "Complaints", path: "/admin/complaints", icon: <MessageSquare size={20} />, badge: pendingComplaints },
   ];
 
   return (

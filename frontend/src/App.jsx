@@ -56,6 +56,7 @@ const OrderManagement = lazy(() => import("./admin/pages/Orders/OrderManagement"
 const OrderDetail = lazy(() => import("./admin/pages/Orders/OrderDetail"));
 const PaymentVerification = lazy(() => import("./admin/pages/PaymentVerification"));
 const CustomerList = lazy(() => import("./admin/pages/Customers"));
+const Complaints = lazy(() => import("./admin/pages/Complaints"));
 
 const Loader = () => <div style={{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}><div>Loading...</div></div>;
 
@@ -111,6 +112,7 @@ function App() {
                                 <Route path="orders/:id" element={<OrderDetail />} />
                                 <Route path="payment-verification" element={<PaymentVerification />} />
                                 <Route path="customers" element={<CustomerList />} />
+                                <Route path="complaints" element={<Complaints />} />
                               </Route>
                             </Routes>
                           </Suspense>
