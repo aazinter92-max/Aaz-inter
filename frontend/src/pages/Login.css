@@ -16,14 +16,13 @@
 }
 
 .auth-page {
-  height: 100vh;
+  min-height: 100vh;
   background-color: var(--auth-bg);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 20px;
   font-family: 'Inter', -apple-system, system-ui, sans-serif;
-  overflow: hidden;
 }
 
 /* Master Container - Precision Layout */
@@ -31,7 +30,7 @@
   display: flex;
   width: 100%;
   max-width: 1000px;
-  height: 580px; /* Fixed height to fit all screens */
+  min-height: 580px;
   background: white;
   border-radius: 20px;
   overflow: hidden;
@@ -412,18 +411,83 @@
   .auth-split-container {
     flex-direction: column;
     max-width: 500px;
+    min-height: auto;
+    height: auto;
   }
   .auth-brand-panel { 
-    padding: 40px; 
+    padding: 32px; 
     text-align: center;
+    flex: none;
   }
   .auth-brand-panel .trust-points {
     display: none;
   }
-  .auth-form-side { padding: 40px; }
+  .auth-brand-panel h1 {
+    font-size: 24px;
+  }
+  .auth-brand-panel p.tagline {
+    margin-bottom: 0;
+  }
+  .auth-form-side { 
+    padding: 32px; 
+  }
 }
 
 @media (max-width: 480px) {
-  .auth-page { padding: 0; }
-  .auth-split-container { border-radius: 0; border: none; min-height: 100vh; }
+  .auth-page { padding: 0; align-items: flex-start; }
+  .auth-split-container { 
+    border-radius: 0; 
+    border: none; 
+    min-height: 100vh;
+    box-shadow: none;
+    background: #ffffff;
+  }
+  .auth-brand-panel {
+    padding: 60px 24px 40px;
+    border-radius: 0 0 40px 40px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  }
+  .auth-brand-panel h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+  }
+  .auth-brand-panel p.tagline {
+    font-size: 14px;
+    max-width: 280px;
+    margin: 0 auto;
+    opacity: 0.9;
+  }
+  .auth-header-minimal {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  .auth-header-minimal h1 {
+    font-size: 26px;
+    color: var(--auth-text-main);
+  }
+  .auth-form-side {
+    padding: 30px 24px 60px;
+  }
+  .form-group-modern label {
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+  .input-modern-group input {
+    height: 52px; 
+    font-size: 16px;
+    border-radius: 12px;
+    background: #f1f5f9;
+  }
+  .input-icon-modern {
+    left: 18px;
+  }
+  .input-modern-group input {
+    padding: 0 16px 0 52px;
+  }
+  .auth-submit-btn {
+    height: 52px !important;
+    font-size: 16px !important;
+    margin-top: 10px;
+  }
 }
