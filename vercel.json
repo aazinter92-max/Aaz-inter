@@ -1,9 +1,7 @@
 {
-  "version": 2,
-  "outputDirectory": "frontend/dist",
   "rewrites": [
     {
-      "source": "/((?!api|static|.*\\..*).*)",
+      "source": "/(.*)",
       "destination": "/index.html"
     }
   ]
