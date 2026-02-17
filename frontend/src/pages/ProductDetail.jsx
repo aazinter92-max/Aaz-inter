@@ -199,7 +199,7 @@ const ProductDetail = () => {
   const mainImage = getAssetUrl(product.image, API_URL);
   
   // Fallback to placeholder if no image
-  const imagePlaceholder = mainImage || `https://via.placeholder.com/800x800/0A74DA/FFFFFF?text=${encodeURIComponent(product.name)}`;
+  const imagePlaceholder = mainImage || `https://placehold.co/800x800/0A74DA/FFFFFF?text=${encodeURIComponent(product.name)}`;
 
   return (
     <div className="product-detail-page">

@@ -43,7 +43,7 @@ const ProductCard = memo(({ product }) => {
   const mainImage = getAssetUrl(product.image, API_URL);
 
   // Fallback to placeholder if no image
-  const imageSrc = mainImage || `https://via.placeholder.com/800x800/0A74DA/FFFFFF?text=${encodeURIComponent(product.name || "Product")}`;
+  const imageSrc = mainImage || `https://placehold.co/800x800/0A74DA/FFFFFF?text=${encodeURIComponent(product.name || "Product")}`;
   const hasStock =
     product.stock !== undefined ? product.stock > 0 : product.inStock;
 
@@ -55,7 +55,7 @@ const ProductCard = memo(({ product }) => {
           alt={product.name}
           loading="lazy"
           onError={(e) =>
-            (e.target.src = "https://via.placeholder.com/300?text=No+Image")
+            (e.target.src = "https://placehold.co/300x300/0A74DA/FFFFFF?text=No+Image")
           }
         />
         {product.isFeatured && (

@@ -108,7 +108,7 @@ const Cart = () => {
                       <img
                         src={(() => {
                           let imgSrc = item.image;
-                          if (!imgSrc) return `https://via.placeholder.com/150x150/0A74DA/FFFFFF?text=${encodeURIComponent(item.name.substring(0, 10))}`;
+                          if (!imgSrc) return `https://placehold.co/150x150/0A74DA/FFFFFF?text=${encodeURIComponent(item.name.substring(0, 10))}`;
                           imgSrc = imgSrc.replace(/\\/g, '/');
                           if (imgSrc.includes('localhost')) {
                             const pathPart = imgSrc.split(/localhost:\d+/)[1] || imgSrc;

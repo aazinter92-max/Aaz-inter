@@ -69,7 +69,7 @@ const Wishlist = () => {
                 }
               }
               
-              const imagePlaceholder = productImage || `https://via.placeholder.com/300x300/0A74DA/FFFFFF?text=${encodeURIComponent(product.name)}`;
+              const imagePlaceholder = productImage || `https://placehold.co/300x300/0A74DA/FFFFFF?text=${encodeURIComponent(product.name)}`;
 
               return (
                 <div key={item._id} className="wishlist-item">

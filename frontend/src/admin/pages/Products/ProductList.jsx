@@ -67,7 +67,7 @@ const ProductList = () => {
   const getImageUrl = (imagePath) => {
     return (
       getAssetUrl(imagePath, API_URL) ||
-      "https://via.placeholder.com/48?text=No+Img"
+      "https://placehold.co/48?text=No+Img"
     );
   };
 
@@ -144,7 +144,7 @@ const ProductList = () => {
                       }}
                       onError={(e) =>
                         (e.target.src =
-                          "https://via.placeholder.com/48?text=No+Img")
+                          "https://placehold.co/48?text=No+Img")
                       }
                     />
                   </div>
