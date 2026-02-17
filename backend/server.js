@@ -115,11 +115,7 @@ app.disable("x-powered-by");
 const allowedOrigins = [
   "http://localhost:5173", // Development frontend
   "http://localhost:3000", // Alternative dev port
-  "https://aaz-international.vercel.app", // Production frontend (Vercel)
-  "https://cheerful-profiterole-accab4.netlify.app", // Production frontend (Netlify old)
-  "https://equipments.netlify.app", // Production frontend (Netlify new)
-  "https://medical-equipments.netlify.app", // User current production frontend (Netlify)
-  process.env.FRONTEND_URL, // Production frontend (env var)
+  process.env.FRONTEND_URL, // Production frontend (Vercel)
 ].filter(Boolean);
 
 app.use(
@@ -128,7 +124,7 @@ app.use(
       // Allow requests with no origin (mobile apps, Postman, etc.)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".vercel.app") || origin.endsWith(".netlify.app")) {
+      if (allowedOrigins.indexOf(origin) !== -1 || (origin && origin.endsWith(".vercel.app"))) {
         callback(null, true);
       } else {
         console.warn(
@@ -257,7 +253,7 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".vercel.app") || origin.endsWith(".netlify.app")) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".vercel.app")) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
