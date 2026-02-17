@@ -94,26 +94,35 @@ export const getInitials = (name) => {
 export const getAssetUrl = (path, baseUrl) => {
   if (!path) return '';
   
-  // 1. Clean up backslashes
-  let cleanPath = path.toString().replace(/\\/g, '/');
+  const PRODUCTION_BACKEND = 'https://aaz-inter-production.up.railway.app';
+  
+  // 1. Clean up backslashes and double slashes
+  let cleanPath = path.toString().replace(/\\/g, '/').replace(/\/+/g, '/');
   
   // 2. Handle absolute URLs already present
   if (cleanPath.startsWith('http')) {
-    // If it's a localhost URL but we are in production base, fix it
-    if (cleanPath.includes('localhost') && baseUrl && !baseUrl.includes('localhost')) {
-      const parts = cleanPath.split(/localhost:\d+/);
+    // If it's a localhost URL but we are in production, fix it
+    if (cleanPath.includes('localhost')) {
+      const parts = cleanPath.split(/localhost:\d+\/?/);
       if (parts.length > 1) {
         const pathPart = parts[1];
-        return `${baseUrl.replace(/\/$/, '')}${pathPart.startsWith('/') ? '' : '/'}${pathPart}`;
+        const base = (baseUrl || PRODUCTION_BACKEND).replace(/\/$/, '');
+        return `${base}/${pathPart.replace(/^\//, '')}`;
       }
     }
     return cleanPath;
   }
   
-  // 3. Ensure a single leading slash for the relative path
-  const normalizedPath = cleanPath.startsWith('/') ? cleanPath : `/${cleanPath}`;
+  // 3. Special Case: If path doesn't start with /uploads but is likely an uploaded file
+  // This helps products with missing prefixes
+  if (!cleanPath.startsWith('/') && !cleanPath.startsWith('uploads')) {
+    // We don't auto-prefix here unless we are sure, but let's ensure leading slash
+    cleanPath = `/${cleanPath}`;
+  } else if (!cleanPath.startsWith('/')) {
+    cleanPath = `/${cleanPath}`;
+  }
   
-  // 4. Combine with base URL (use production URL if available)
-  const base = (baseUrl || 'https://aaz-inter-production.up.railway.app').replace(/\/$/, '');
-  return `${base}${normalizedPath}`;
+  // 4. Combine with base URL
+  const base = (baseUrl || PRODUCTION_BACKEND).replace(/\/$/, '');
+  return `${base}${cleanPath}`;
 };

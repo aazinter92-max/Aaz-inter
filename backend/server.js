@@ -118,6 +118,7 @@ const allowedOrigins = [
   "https://aaz-international.vercel.app", // Production frontend (Vercel)
   "https://cheerful-profiterole-accab4.netlify.app", // Production frontend (Netlify old)
   "https://equipments.netlify.app", // Production frontend (Netlify new)
+  "https://medical-equipments.netlify.app", // User current production frontend (Netlify)
   process.env.FRONTEND_URL, // Production frontend (env var)
 ].filter(Boolean);
 
