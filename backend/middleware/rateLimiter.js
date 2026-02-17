@@ -3,7 +3,7 @@ const rateLimit = require('express-rate-limit');
 // General API rate limiter
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 500, // Increased from 100 to 500 to accommodate SPA behavior
   message: {
     error: 'Too many requests from this IP, please try again later.',
     retryAfter: '15 minutes'
@@ -55,7 +55,7 @@ const uploadLimiter = rateLimit({
 // Admin action rate limiter (stricter)
 const adminLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 50, // Fewer requests for admin
+  max: 200, // Increased from 50 to 200 for better admin experience
   message: {
     error: 'Too many admin requests, please slow down.'
   },

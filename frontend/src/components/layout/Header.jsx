@@ -121,9 +121,9 @@ const Header = () => {
       try {
         const res = await cachedFetch(api("/api/categories"));
         const data = await res.json();
-        setCategories(data);
+        setCategories(Array.isArray(data) ? data : []);
       } catch (err) {
-        // Error handled silently
+        setCategories([]);
       }
     };
     fetchCategories();
