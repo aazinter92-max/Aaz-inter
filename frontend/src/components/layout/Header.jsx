@@ -310,7 +310,7 @@ const Header = () => {
               <form onSubmit={(e) => {
                 e.preventDefault();
                 if (searchQuery.trim()) {
-                  window.location.href = `/products?search=${encodeURIComponent(searchQuery.trim())}`;
+                  navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
                 }
                 setShowSuggestions(false);
               }} className="header-search-form">

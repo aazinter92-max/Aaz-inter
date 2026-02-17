@@ -82,84 +82,84 @@ const PublicLayout = ({ children }) => {
 
 function App() {
   return (
-     <AuthProvider>
-      <SocketProvider>
-        <NotificationProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <Router>
-              <ScrollToTop />
-              <Suspense fallback={<Loader />}>
-                <Routes>
-                  {/* Admin Routes */}
-                  <Route
-                    path="/admin/*"
-                    element={
-                      <AdminAuthProvider>
-                        <Suspense fallback={<Loader />}>
-                          <Routes>
-                            <Route path="login" element={<AdminLogin />} />
-                            <Route element={<AdminLayout />}>
-                              <Route index element={<Navigate to="dashboard" replace />} />
-                              <Route path="dashboard" element={<AdminDashboard />} />
-                              <Route path="products" element={<ProductList />} />
-                              <Route path="products/add" element={<ProductForm />} />
-                              <Route path="products/edit/:id" element={<ProductForm />} />
-                              <Route path="products/:id" element={<ProductForm />} />
-                              <Route path="categories" element={<Categories />} />
-                              <Route path="orders" element={<OrderManagement />} />
-                              <Route path="orders/:id" element={<OrderDetail />} />
-                              <Route path="payment-verification" element={<PaymentVerification />} />
-                              <Route path="customers" element={<CustomerList />} />
-                            </Route>
-                          </Routes>
-                        </Suspense>
-                      </AdminAuthProvider>
-                    }
-                  />
+    <Router>
+      <AuthProvider>
+        <SocketProvider>
+          <NotificationProvider>
+            <CartProvider>
+              <WishlistProvider>
+                <ScrollToTop />
+                <Suspense fallback={<Loader />}>
+                  <Routes>
+                    {/* Admin Routes */}
+                    <Route
+                      path="/admin/*"
+                      element={
+                        <AdminAuthProvider>
+                          <Suspense fallback={<Loader />}>
+                            <Routes>
+                              <Route path="login" element={<AdminLogin />} />
+                              <Route element={<AdminLayout />}>
+                                <Route index element={<Navigate to="dashboard" replace />} />
+                                <Route path="dashboard" element={<AdminDashboard />} />
+                                <Route path="products" element={<ProductList />} />
+                                <Route path="products/add" element={<ProductForm />} />
+                                <Route path="products/edit/:id" element={<ProductForm />} />
+                                <Route path="products/:id" element={<ProductForm />} />
+                                <Route path="categories" element={<Categories />} />
+                                <Route path="orders" element={<OrderManagement />} />
+                                <Route path="orders/:id" element={<OrderDetail />} />
+                                <Route path="payment-verification" element={<PaymentVerification />} />
+                                <Route path="customers" element={<CustomerList />} />
+                              </Route>
+                            </Routes>
+                          </Suspense>
+                        </AdminAuthProvider>
+                      }
+                    />
 
-                  {/* Public Routes */}
-                  <Route
-                    path="/*"
-                    element={
-                      <PublicLayout>
-                        <Routes>
-                          <Route path="/" element={<Home />} />
-                          <Route path="/login" element={<Login />} />
-                          <Route path="/signup" element={<Signup />} />
-                          <Route path="/verify-email" element={<VerifyEmail />} />
-                          <Route path="/verify-email/:token" element={<VerifyEmail />} />
-                          <Route path="/forgot-password" element={<ForgotPassword />} />
-                          <Route path="/reset-password/:token" element={<ResetPassword />} />
-                          <Route path="/blog" element={<Blog />} />
-                          <Route path="/services" element={<Services />} />
-                          <Route path="/resources" element={<Resources />} />
-                          <Route path="/about" element={<About />} />
-                          <Route path="/products" element={<Products />} />
-                          <Route path="/products/:id" element={<ProductDetail />} />
-                          <Route path="/cart" element={<Cart />} />
-                          <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
-                          <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
-                          <Route path="/contact" element={<ProtectedRoute><Contact /></ProtectedRoute>} />
-                          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
-                          <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
-                          <Route path="/my-orders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
-                          <Route path="/order-details/:orderId" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
-                          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                          <Route path="/terms-conditions" element={<TermsConditions />} />
-                          <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
-                        </Routes>
-                      </PublicLayout>
-                    }
-                  />
-                </Routes>
-              </Suspense>
-            </Router>
-          </WishlistProvider>
-        </CartProvider>
-      </NotificationProvider>
-    </SocketProvider>
-  </AuthProvider>
+                    {/* Public Routes */}
+                    <Route
+                      path="/*"
+                      element={
+                        <PublicLayout>
+                          <Routes>
+                            <Route path="/" element={<Home />} />
+                            <Route path="/login" element={<Login />} />
+                            <Route path="/signup" element={<Signup />} />
+                            <Route path="/verify-email" element={<VerifyEmail />} />
+                            <Route path="/verify-email/:token" element={<VerifyEmail />} />
+                            <Route path="/forgot-password" element={<ForgotPassword />} />
+                            <Route path="/reset-password/:token" element={<ResetPassword />} />
+                            <Route path="/blog" element={<Blog />} />
+                            <Route path="/services" element={<Services />} />
+                            <Route path="/resources" element={<Resources />} />
+                            <Route path="/about" element={<About />} />
+                            <Route path="/products" element={<Products />} />
+                            <Route path="/products/:id" element={<ProductDetail />} />
+                            <Route path="/cart" element={<Cart />} />
+                            <Route path="/checkout" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
+                            <Route path="/order-confirmation" element={<ProtectedRoute><OrderConfirmation /></ProtectedRoute>} />
+                            <Route path="/contact" element={<ProtectedRoute><Contact /></ProtectedRoute>} />
+                            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                            <Route path="/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+                            <Route path="/my-orders" element={<ProtectedRoute><MyOrders /></ProtectedRoute>} />
+                            <Route path="/order-details/:orderId" element={<ProtectedRoute><OrderDetails /></ProtectedRoute>} />
+                            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                            <Route path="/terms-conditions" element={<TermsConditions />} />
+                            <Route path="/medical-disclaimer" element={<MedicalDisclaimer />} />
+                          </Routes>
+                        </PublicLayout>
+                      }
+                    />
+                  </Routes>
+                </Suspense>
+              </WishlistProvider>
+            </CartProvider>
+          </NotificationProvider>
+        </SocketProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

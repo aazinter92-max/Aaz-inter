@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, useMemo, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import useInactivityLogout from '../hooks/useInactivityLogout';
 import { api, cachedFetch } from '../config/api';
 const AuthContext = createContext();
@@ -14,6 +15,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const customAuthCheck = async () => {
@@ -231,10 +233,8 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('aaz-cart');
-    if (window.location.pathname !== '/login') {
-      window.location.href = '/login';
-    }
-  }, []);
+    navigate('/login');
+  }, [navigate]);
 
   const updateProfile = useCallback(async (updates) => {
     try {
