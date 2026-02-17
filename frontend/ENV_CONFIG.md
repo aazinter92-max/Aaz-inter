@@ -17,21 +17,21 @@ VITE_API_URL=https://aaz-inter-production.up.railway.app
 ## How It Works
 
 1. **Local Development**: Uses `.env` file → connects to `http://localhost:5000`
-2. **Vercel Production**: Uses `.env.production` file → connects to Railway backend
+2. **Cloudflare Pages Production**: Uses `.env.production` file → connects to Railway backend
 3. **NO FALLBACKS**: The app will fail fast if `VITE_API_URL` is not set
 
 ## Deployment Checklist
 
-### Vercel Frontend
+### Cloudflare Pages Frontend
 
 - ✅ `.env.production` is committed to git
-- ✅ Vercel automatically uses `.env.production` for production builds
-- ✅ No need to set environment variables in Vercel dashboard
+- ✅ Cloudflare Pages uses `.env.production` for production builds
+- ✅ Or set environment variables in Cloudflare Dashboard: Settings → Environment Variables
 
 ### Railway Backend
 
-- ✅ CORS allows `https://aaz-international.vercel.app`
-- ✅ CORS allows all `*.vercel.app` domains (for preview deployments)
+- ✅ CORS allows Cloudflare Pages domain
+- ✅ CORS allows all `*.pages.dev` domains (for preview deployments)
 - ✅ OPTIONS method enabled for preflight requests
 
 ## Testing
@@ -60,4 +60,4 @@ If you see CORS errors:
 1. Check browser console for the actual origin being used
 2. Verify Railway backend is running
 3. Check Railway logs for CORS warnings
-4. Ensure Vercel deployment used `.env.production`
+4. Ensure Cloudflare deployment used `.env.production`

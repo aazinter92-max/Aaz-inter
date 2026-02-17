@@ -1,8 +1,8 @@
 // API Configuration
 // IMPORTANT: Environment-based API URL configuration
 //
-// Vercel does NOT use .env.production from git!
-// You MUST set VITE_API_URL in Vercel dashboard:
+// Cloudflare Pages does NOT use .env.production from git!
+// You MUST set VITE_API_URL in Cloudflare Dashboard:
 // Settings → Environment Variables → Add VITE_API_URL
 //
 // For now, using fallback to Railway URL in production mode

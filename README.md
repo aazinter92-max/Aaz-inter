@@ -261,7 +261,7 @@ npm run test
 ### Frontend (React/Vite)
 
 - Build: `npm run build`
-- Deploy to Vercel, Netlify, or any static hosting
+- Deploy to Cloudflare Pages, Netlify, or any static hosting
 - Update API endpoints for production
 
 ## 📞 Support & Contact

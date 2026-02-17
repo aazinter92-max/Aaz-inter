@@ -83,7 +83,7 @@ const registerUser = async (req, res, next) => {
     if (user) {
        // Attempt to send email but don't block registration
        try {
-         const verificationUrl = `${process.env.FRONTEND_URL || 'https://aaz-international.vercel.app'}/verify-email/${verificationToken}`;
+         const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
          
          const htmlContent = `
 <!DOCTYPE html>
@@ -228,7 +228,7 @@ const resendVerificationEmail = async (req, res, next) => {
 
     // Send email (non-blocking)
     try {
-      const verificationUrl = `${process.env.FRONTEND_URL || 'https://aaz-international.vercel.app'}/verify-email/${verificationToken}`;
+      const verificationUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
       
       const htmlContent = `
 <!DOCTYPE html>
@@ -383,7 +383,7 @@ const forgotPassword = async (req, res, next) => {
 
     // Send Email
     try {
-      const resetUrl = `${process.env.FRONTEND_URL || 'https://aaz-international.vercel.app'}/reset-password/${resetToken}`;
+      const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
       
       const htmlContent = `
 <!DOCTYPE html>

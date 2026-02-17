@@ -115,7 +115,7 @@ app.disable("x-powered-by");
 const allowedOrigins = [
   "http://localhost:5173", // Development frontend
   "http://localhost:3000", // Alternative dev port
-  process.env.FRONTEND_URL, // Production frontend (Vercel)
+  process.env.FRONTEND_URL, // Production frontend (Cloudflare Pages)
 ].filter(Boolean);
 
 app.use(
@@ -124,7 +124,7 @@ app.use(
       // Allow requests with no origin (mobile apps, Postman, etc.)
       if (!origin) return callback(null, true);
 
-      if (allowedOrigins.indexOf(origin) !== -1 || (origin && origin.endsWith(".vercel.app"))) {
+      if (allowedOrigins.indexOf(origin) !== -1 || (origin && origin.endsWith(".pages.dev"))) {
         callback(null, true);
       } else {
         console.warn(
@@ -253,7 +253,7 @@ const { Server } = require("socket.io");
 const io = new Server(server, {
   cors: {
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".vercel.app")) {
+      if (!origin || allowedOrigins.indexOf(origin) !== -1 || origin.endsWith(".pages.dev")) {
         callback(null, true);
       } else {
         callback(new Error("Not allowed by CORS"));
