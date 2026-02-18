@@ -2,6 +2,7 @@ const express = require("express"); // Triggering restart for 2FA routes
 const dotenv = require("dotenv");
 const cors = require("cors");
 const helmet = require("helmet");
+const compression = require("compression");
 const mongoSanitize = require("express-mongo-sanitize");
 const connectDB = require("./config/db");
 const { notFound, errorHandler } = require("./middleware/errorMiddleware");
@@ -58,6 +59,9 @@ const complaintRoutes = require("./routes/complaintRoutes");
 connectDB();
 
 const app = express();
+
+// Gzip Compression for Performance
+app.use(compression());
 
 // Trust proxy for rate-limiting
 app.set('trust proxy', 1);

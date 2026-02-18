@@ -1,22 +1,23 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Eye, Package, CheckCircle, XCircle, Clock, Loader, Truck } from 'lucide-react';
+import { Eye, Package, CheckCircle, XCircle, Clock, Loader, Truck, ShoppingCart } from 'lucide-react';
 import { useSocket } from '../../../context/SocketContext';
 import { api } from '../../../config/api';
 import './OrderManagement.css';
 
 const OrderManagement = () => {
-  const [activeTab, setActiveTab] = useState('all');
   const [orders, setOrders] = useState({
-    all: [],
-    approved: [],
-    rejected: []
+    pending: [],
+    processing: [],
+    completed: [],
+    all: []
   });
   const [loading, setLoading] = useState(true);
   const [counts, setCounts] = useState({
-    all: 0,
-    approved: 0,
-    rejected: 0
+    pending: 0,
+    processing: 0,
+    completed: 0,
+    all: 0
   });
   const { socket } = useSocket();
 
@@ -48,87 +49,46 @@ const OrderManagement = () => {
       setLoading(true);
       const token = localStorage.getItem('adminToken');
       
-      if (!token) {
-        console.error('No admin token found');
-        setLoading(false);
-        return;
-      }
+      if (!token) return;
 
-      // Fetch ALL orders (no filtering by status)
       const response = await fetch(api('/api/orders'), {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch orders');
-      }
+      if (!response.ok) throw new Error('Failed to fetch orders');
 
-      const data = await response.json();
-      const allOrders = Array.isArray(data) ? data : [];
-      console.log('✅ All Orders API Response:', allOrders);
+      const allOrders = await response.json();
+      const ordersArray = Array.isArray(allOrders) ? allOrders : [];
 
-      // Categorize orders with legacy status support
-      const pending = allOrders.filter(o => 
-        o.orderStatus?.toLowerCase() === 'pending' || 
-        o.orderStatus?.toLowerCase() === 'created' ||
-        o.orderStatus?.toLowerCase() === 'payment_pending'
+      // Task-Oriented Filtering Logic
+      const pending = ordersArray.filter(o => 
+        ['pending', 'created', 'payment_pending'].includes(o.orderStatus?.toLowerCase())
       );
       
-      const approved = allOrders.filter(o => {
-        const pStatus = o.paymentStatus?.toLowerCase();
-        const oStatus = o.orderStatus?.toLowerCase();
-        // Modern: paymentStatus is approved/paid
-        // Legacy: orderStatus is approved/paid
-        return pStatus === 'approved' || pStatus === 'paid' || 
-               oStatus === 'approved' || oStatus === 'paid';
-      });
+      const processing = ordersArray.filter(o => 
+        ['processing', 'shipped'].includes(o.orderStatus?.toLowerCase())
+      );
       
-      const rejected = allOrders.filter(o => {
-        const pStatus = o.paymentStatus?.toLowerCase();
-        const oStatus = o.orderStatus?.toLowerCase();
-        // Modern: paymentStatus is rejected/failed
-        // Legacy: orderStatus is rejected/failed
-        return pStatus === 'rejected' || pStatus === 'failed' || 
-               oStatus === 'rejected' || oStatus === 'failed';
-      });
-
-      console.log('📊 Stats:', {
-        allVisible: allOrders.filter(o => {
-          const pStatus = o.paymentStatus?.toLowerCase();
-          const oStatus = o.orderStatus?.toLowerCase();
-          return !(pStatus === 'rejected' || pStatus === 'failed' || 
-                   oStatus === 'rejected' || oStatus === 'failed');
-        }).length,
-        approved: approved.length,
-        rejected: rejected.length
-      });
+      const completed = ordersArray.filter(o => 
+        ['delivered', 'completed', 'approved', 'paid'].includes(o.orderStatus?.toLowerCase())
+      );
 
       setOrders({
-        all: allOrders.filter(o => {
-          const pStatus = o.paymentStatus?.toLowerCase();
-          const oStatus = o.orderStatus?.toLowerCase();
-          return !(pStatus === 'rejected' || pStatus === 'failed' || 
-                   oStatus === 'rejected' || oStatus === 'failed');
-        }),
-        approved,
-        rejected
+        pending,
+        processing,
+        completed,
+        all: ordersArray
       });
 
       setCounts({
-        all: allOrders.filter(o => {
-          const pStatus = o.paymentStatus?.toLowerCase();
-          const oStatus = o.orderStatus?.toLowerCase();
-          return !(pStatus === 'rejected' || pStatus === 'failed' || 
-                   oStatus === 'rejected' || oStatus === 'failed');
-        }).length,
-        approved: approved.length,
-        rejected: rejected.length
+        pending: pending.length,
+        processing: processing.length,
+        completed: completed.length,
+        all: ordersArray.length
       });
 
     } catch (error) {
       console.error('Error fetching orders:', error);
-      setOrders({ all: [], pending: [], approved: [], rejected: [] });
-      setCounts({ all: 0, pending: 0, approved: 0, rejected: 0 });
     } finally {
       setLoading(false);
     }
@@ -141,15 +101,13 @@ const OrderManagement = () => {
       shipped: { class: 'status-shipped', label: 'Shipped', icon: Truck },
       delivered: { class: 'status-delivered', label: 'Delivered', icon: CheckCircle },
       cancelled: { class: 'status-cancelled', label: 'Cancelled', icon: XCircle },
-      // Legacy support
       approved: { class: 'status-approved', label: 'Approved', icon: CheckCircle },
-      rejected: { class: 'status-rejected', label: 'Rejected', icon: XCircle }
+      paid: { class: 'status-approved', label: 'Paid', icon: CheckCircle }
     };
     
-    // Normalize status to lowercase for lookup
     const normalizedStatus = status?.toLowerCase() || 'pending';
     const config = statusConfig[normalizedStatus] || statusConfig.pending;
-    const Icon = config.icon;
+    const Icon = config.icon || Clock;
     
     return (
       <span className={`status-badge status-${normalizedStatus}`}>
@@ -161,12 +119,11 @@ const OrderManagement = () => {
 
   const getPaymentBadge = (paymentStatus) => {
     const statusConfig = {
-      pending: { class: 'payment-pending', label: 'Payment Pending' },
-      approved: { class: 'payment-approved', label: 'Payment Approved' },
-      rejected: { class: 'payment-rejected', label: 'Payment Rejected' },
+      pending: { class: 'payment-pending', label: 'Pending' },
+      approved: { class: 'payment-approved', label: 'Approved' },
+      rejected: { class: 'payment-rejected', label: 'Rejected' },
       paid: { class: 'payment-paid', label: 'Paid' },
-      failed: { class: 'payment-failed', label: 'Failed' },
-      refunded: { class: 'payment-rejected', label: 'Refunded' }
+      failed: { class: 'payment-failed', label: 'Failed' }
     };
     
     const normalizedStatus = paymentStatus?.toLowerCase() || 'pending';
@@ -178,6 +135,8 @@ const OrderManagement = () => {
       </span>
     );
   };
+
+  const [activeTab, setActiveTab] = useState('pending');
 
   const renderOrderTable = (orderList, status) => {
     if (loading) {
@@ -256,46 +215,55 @@ const OrderManagement = () => {
     <div className="order-management-page">
       <div className="page-header">
         <h1 className="page-title">Order Management</h1>
-        <p className="page-subtitle">Manage and track all orders by status</p>
+        <p className="page-subtitle">Standardize your workflow by processing orders through these stages</p>
       </div>
 
       {/* Status Tabs */}
       <div className="status-tabs">
         <button
+          className={`tab-button ${activeTab === 'pending' ? 'active' : ''}`}
+          onClick={() => setActiveTab('pending')}
+        >
+          <Clock size={18} />
+          <span>Pending Approval</span>
+          {counts.pending > 0 && (
+            <span className="tab-badge" style={{ background: '#f59e0b' }}>{counts.pending}</span>
+          )}
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'processing' ? 'active' : ''}`}
+          onClick={() => setActiveTab('processing')}
+        >
+          <Package size={18} />
+          <span>To Dispatch</span>
+          {counts.processing > 0 && (
+            <span className="tab-badge" style={{ background: '#3b82f6' }}>{counts.processing}</span>
+          )}
+        </button>
+        <button
+          className={`tab-button ${activeTab === 'completed' ? 'active' : ''}`}
+          onClick={() => setActiveTab('completed')}
+        >
+          <CheckCircle size={18} />
+          <span>Completed</span>
+          <span className="tab-badge" style={{ background: '#10b981' }}>{counts.completed}</span>
+        </button>
+        <button
           className={`tab-button ${activeTab === 'all' ? 'active' : ''}`}
           onClick={() => setActiveTab('all')}
         >
-          <Package size={18} />
+          <ShoppingCart size={18} />
           <span>All Orders</span>
           <span className="tab-badge" style={{ background: '#64748b' }}>{counts.all}</span>
-        </button>
-        <button
-          className={`tab-button ${activeTab === 'approved' ? 'active' : ''}`}
-          onClick={() => setActiveTab('approved')}
-        >
-          <CheckCircle size={18} />
-          <span>Payment Approved</span>
-          {counts.approved > 0 && (
-            <span className="tab-badge approved">{counts.approved}</span>
-          )}
-        </button>
-        <button
-          className={`tab-button ${activeTab === 'rejected' ? 'active' : ''}`}
-          onClick={() => setActiveTab('rejected')}
-        >
-          <XCircle size={18} />
-          <span>Payment Rejected</span>
-          {counts.rejected > 0 && (
-            <span className="tab-badge rejected">{counts.rejected}</span>
-          )}
         </button>
       </div>
 
       {/* Order Content */}
       <div className="tab-content">
+        {activeTab === 'pending' && renderOrderTable(orders.pending, 'pending')}
+        {activeTab === 'processing' && renderOrderTable(orders.processing, 'to dispatch')}
+        {activeTab === 'completed' && renderOrderTable(orders.completed, 'completed')}
         {activeTab === 'all' && renderOrderTable(orders.all, 'all')}
-        {activeTab === 'approved' && renderOrderTable(orders.approved, 'approved')}
-        {activeTab === 'rejected' && renderOrderTable(orders.rejected, 'rejected')}
       </div>
     </div>
   );

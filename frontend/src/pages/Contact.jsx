@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Phone, Mail, MapPin, MessageCircle, Clock, Send, ShieldCheck } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { sendWhatsAppMessage, whatsappMessages, isValidEmail } from '../utils/helpers';
@@ -10,6 +11,7 @@ import './Contact.css';
 
 const Contact = () => {
   const { user } = useAuth();
+  const location = useLocation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,6 +21,49 @@ const Contact = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const productId = params.get('product');
+    const inquiryType = params.get('type');
+
+    if (inquiryType === 'bulk') {
+      setFormData(prev => ({
+        ...prev,
+        subject: `Bulk Order Inquiry`,
+        message: `I am interested in placing a bulk order. Please provide wholesale pricing and shipping details for industrial procurement.`
+      }));
+    }
+
+    if (productId) {
+      const fetchProductInfo = async () => {
+        try {
+          const res = await fetch(api(`/api/products/${productId}`));
+          if (res.ok) {
+            const product = await res.json();
+            setFormData(prev => ({
+              ...prev,
+              subject: inquiryType === 'bulk' ? `Bulk Inquiry: ${product.name}` : `Inquiry about ${product.name}`,
+              message: inquiryType === 'bulk' 
+                ? `I am interested in a bulk order for: ${product.name} (SKU: ${product.sku || 'N/A'}). Please provide a wholesale quote for [Enter Quantity] units.`
+                : `Hello, I would like to receive more information about ${product.name} (SKU: ${product.sku || 'N/A'}).`
+            }));
+          }
+        } catch (err) {
+          console.error("Error pre-filling contact form:", err);
+        }
+      };
+      fetchProductInfo();
+    }
+    
+    if (user) {
+      setFormData(prev => ({
+        ...prev,
+        name: user.name || '',
+        email: user.email || ''
+      }));
+    }
+  }, [location.search, user]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

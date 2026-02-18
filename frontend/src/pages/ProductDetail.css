@@ -345,6 +345,57 @@
   box-shadow: 0 4px 12px rgba(22, 101, 52, 0.1) !important;
 }
 
+/* Bulk Order Special Section */
+.bulk-order-card {
+  margin-top: 24px;
+  background: #f0f9ff;
+  border: 1px solid #bae6fd;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.bulk-icon {
+  width: 40px;
+  height: 40px;
+  background: white;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0369a1;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+}
+
+.bulk-info {
+  flex: 1;
+}
+
+.bulk-info h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0c4a6e;
+  margin: 0 0 4px 0;
+}
+
+.bulk-info p {
+  font-size: 13px;
+  color: #0284c7;
+  margin: 0 0 12px 0;
+  line-height: 1.4;
+}
+
+.bulk-info .btn-link {
+  color: #0369a1 !important;
+  font-weight: 700 !important;
+  padding: 0 !important;
+  height: auto !important;
+  text-decoration: underline !important;
+}
+
 /* Trust Badges - Minimal */
 .trust-badges-grid {
   display: grid;

@@ -14,6 +14,7 @@ import { WishlistProvider } from "./context/WishlistContext";
 import { NotificationProvider } from "./context/NotificationContext";
 import ScrollToTop from "./components/common/ScrollToTop";
 import "./App.css";
+import Loader from "./components/common/Loader";
 
 // Eager load critical components
 import Header from "./components/layout/Header";
@@ -40,7 +41,7 @@ const Resources = lazy(() => import("./pages/Resources"));
 const MyOrders = lazy(() => import("./pages/MyOrders"));
 const OrderDetails = lazy(() => import("./pages/OrderDetails"));
 const Wishlist = lazy(() => import("./pages/Wishlist"));
-const Blog = lazy(() => import("./pages/Blog"));
+
 const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
 const TermsConditions = lazy(() => import("./pages/TermsConditions"));
 const MedicalDisclaimer = lazy(() => import("./pages/MedicalDisclaimer"));
@@ -58,7 +59,7 @@ const PaymentVerification = lazy(() => import("./admin/pages/PaymentVerification
 const CustomerList = lazy(() => import("./admin/pages/Customers"));
 const Complaints = lazy(() => import("./admin/pages/Complaints"));
 
-const Loader = () => <div style={{display:'flex',justifyContent:'center',alignItems:'center',minHeight:'60vh'}}><div>Loading...</div></div>;
+// Removed misplaced import
 
 const PublicLayout = ({ children }) => {
   const location = useLocation();
@@ -133,7 +134,7 @@ function App() {
                             <Route path="/verify-email/:token" element={<VerifyEmail />} />
                             <Route path="/forgot-password" element={<ForgotPassword />} />
                             <Route path="/reset-password/:token" element={<ResetPassword />} />
-                            <Route path="/blog" element={<Blog />} />
+
                             <Route path="/services" element={<Services />} />
                             <Route path="/resources" element={<Resources />} />
                             <Route path="/about" element={<About />} />

@@ -1,4 +1,5 @@
 import { memo } from "react";
+import LazyImage from "../common/LazyImage";
 import { useNavigate } from "react-router-dom";
 import { ShoppingCart, Eye, Heart } from "lucide-react";
 import { useCart } from "../../context/CartContext";
@@ -50,10 +51,12 @@ const ProductCard = memo(({ product }) => {
   return (
     <Card className="product-card" hover onClick={handleViewProduct}>
       <div className="product-card-image">
-        <img
+
+
+        <LazyImage
           src={imageSrc}
           alt={product.name}
-          loading="lazy"
+          className="product-card-image-img"
           onError={(e) =>
             (e.target.src = "https://placehold.co/300x300/0A74DA/FFFFFF?text=No+Image")
           }
@@ -95,6 +98,7 @@ const ProductCard = memo(({ product }) => {
               icon={<Eye size={16} />}
               onClick={handleViewProduct}
               aria-label="View product details"
+              className="btn-card-view"
             >
               View
             </Button>
@@ -105,10 +109,19 @@ const ProductCard = memo(({ product }) => {
               onClick={handleAddToCart}
               disabled={!hasStock}
               aria-label="Add to cart"
+              className="btn-card-add"
             >
               Add to Cart
             </Button>
           </div>
+          <Button
+            variant="text"
+            size="small"
+            className="bulk-inquiry-btn"
+            onClick={(e) => { e.stopPropagation(); navigate(`/contact?product=${productId}`); }}
+          >
+            Bulk Order Inquiry?
+          </Button>
         </div>
       </div>
     </Card>

@@ -25,6 +25,7 @@ import { useNotification } from "../../context/NotificationContext";
 import { sendWhatsAppMessage, whatsappMessages } from "../../utils/helpers";
 import { api, cachedFetch } from '../../config/api';
 import "./Header.css";
+import "./HeaderMobile.css";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -224,11 +225,11 @@ const Header = () => {
       dropdown: false,
     },
     {
-      name: "Products",
+      name: "Categories",
       path: "/products",
       dropdown: true,
       items: [
-        { name: "All Products", path: "/products" },
+        { name: "All Categories", path: "/products" },
         ...categories.map((cat) => ({
           name: cat.name,
           path: `/products?category=${cat._id}`,
@@ -306,8 +307,8 @@ const Header = () => {
               ))}
             </nav>
 
-            {/* Compact Integrated Search Bar */}
-            <div className="header-search-wrapper" ref={searchRef}>
+            {/* Compact Integrated Search Bar - Desktop */}
+            <div className="header-search-wrapper desktop-only-search" ref={searchRef}>
               <form onSubmit={(e) => {
                 e.preventDefault();
                 if (searchQuery.trim()) {
@@ -416,7 +417,7 @@ const Header = () => {
               {/* User Profile / Login */}
               {user ? (
                 <div
-                  className="user-menu-wrapper"
+                  className="user-menu-wrapper desktop-only"
                   onMouseEnter={handleUserMenuEnter}
                   onMouseLeave={handleUserMenuLeave}
                 >
@@ -472,13 +473,13 @@ const Header = () => {
                   )}
                 </div>
               ) : (
-                <Link to="/login" className="login-btn-modern">
+                <Link to="/login" className="login-btn-modern desktop-only">
                   <User size={18} />
                   <span>Login</span>
                 </Link>
               )}
 
-              <Link to="/wishlist" className="wishlist-btn-modern">
+              <Link to="/wishlist" className="wishlist-btn-modern desktop-only">
                 <Heart size={20} />
                 {wishlistCount > 0 && (
                   <span className="wishlist-badge-modern">{wishlistCount}</span>
@@ -500,6 +501,30 @@ const Header = () => {
               </button>
             </div>
           </div>
+          
+          {/* Mobile Full Width Search Bar */}
+          <div className="mobile-only-search-container">
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              if (searchQuery.trim()) {
+                navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+              }
+              setShowSuggestions(false);
+            }} className="mobile-header-search-form">
+              <Search size={16} className="mobile-search-icon" />
+              <input 
+                type="text" 
+                placeholder="Search products..." 
+                className="mobile-header-search-input"
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  setShowSuggestions(true);
+                }}
+                onFocus={() => searchQuery.trim().length >= 2 && setShowSuggestions(true)}
+              />
+            </form>
+          </div>
         </div>
       </div>
 
@@ -517,74 +542,115 @@ const Header = () => {
                 </button>
               </div>
 
-              {/* Mobile Search Bar */}
-              <div className="mobile-search-section">
-                <form 
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    if (searchQuery.trim()) {
-                      navigate(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
-                      closeMobileMenu();
-                    }
-                  }} 
-                  className="mobile-search-form"
-                >
-                  <input 
-                    type="text" 
-                    placeholder="Search products..." 
-                    className="mobile-search-input"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                  <button type="submit" className="mobile-search-btn">
-                    <Search size={18} />
-                  </button>
-                </form>
-              </div>
-              <nav className="mobile-nav-modern">
-                {navigation.map((item) => (
-                  <div key={item.name} className="mobile-nav-item">
-                    {item.dropdown ? (
-                      <>
-                        <button
-                          className="mobile-nav-link-modern mobile-dropdown-toggle"
-                          onClick={() => toggleDropdown(item.name)}
-                        >
-                          {item.name}
-                          <ChevronDown
-                            size={18}
-                            className={`mobile-dropdown-icon ${activeDropdown === item.name ? "open" : ""}`}
-                          />
-                        </button>
-                        {activeDropdown === item.name && (
-                          <div className="mobile-dropdown-menu">
-                            {item.items.map((subItem) => (
-                              <Link
-                                key={subItem.name}
-                                to={subItem.path}
-                                className="mobile-dropdown-item"
-                                onClick={closeMobileMenu}
-                              >
-                                {subItem.name}
-                              </Link>
-                            ))}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <NavLink
-                        to={item.path}
-                        className={({ isActive }) =>
-                          `mobile-nav-link-modern ${isActive ? "mobile-nav-active" : ""}`
-                        }
-                        onClick={closeMobileMenu}
-                      >
-                        {item.name}
-                      </NavLink>
-                    )}
+              {/* Mobile User Section */}
+              <div className="mobile-user-section">
+                {user ? (
+                  <div className="mobile-user-profile">
+                    <div className="mobile-user-avatar">
+                      <span className="user-initial">{user.name.charAt(0).toUpperCase()}</span>
+                    </div>
+                    <div className="mobile-user-info">
+                      <span className="mobile-user-name">{user.name}</span>
+                      <span className="mobile-user-email">{user.email}</span>
+                    </div>
                   </div>
-                ))}
-              </nav>
+                ) : (
+                  <Link to="/login" className="mobile-login-btn" onClick={closeMobileMenu}>
+                    <User size={20} />
+                    <span>Login / Register</span>
+                  </Link>
+                )}
+              </div>
+              
+              <div className="mobile-menu-body">
+                <div className="mobile-menu-group">
+                  <h4 className="mobile-menu-group-title">Main</h4>
+                  <nav className="mobile-nav-modern">
+                    {navigation.map((item) => (
+                      <div key={item.name} className="mobile-nav-item">
+                        {item.dropdown ? (
+                          <>
+                            <button
+                              className="mobile-nav-link-modern mobile-dropdown-toggle"
+                              onClick={() => toggleDropdown(item.name)}
+                            >
+                              <span className="flex items-center gap-3">
+                                {item.name}
+                              </span>
+                              <ChevronDown
+                                size={18}
+                                className={`mobile-dropdown-icon ${activeDropdown === item.name ? "open" : ""}`}
+                              />
+                            </button>
+                            {activeDropdown === item.name && (
+                              <div className="mobile-dropdown-menu">
+                                {item.items.map((subItem) => (
+                                  <Link
+                                    key={subItem.name}
+                                    to={subItem.path}
+                                    className="mobile-dropdown-item"
+                                    onClick={closeMobileMenu}
+                                  >
+                                    {subItem.name}
+                                  </Link>
+                                ))}
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          <NavLink
+                            to={item.path}
+                            className={({ isActive }) =>
+                              `mobile-nav-link-modern ${isActive ? "mobile-nav-active" : ""}`
+                            }
+                            onClick={closeMobileMenu}
+                          >
+                            {item.name}
+                          </NavLink>
+                        )}
+                      </div>
+                    ))}
+                  </nav>
+                </div>
+                
+                <div className="mobile-menu-group">
+                  <h4 className="mobile-menu-group-title">Personal</h4>
+                  <nav className="mobile-nav-modern">
+                    <Link to="/wishlist" className="mobile-nav-link-modern" onClick={closeMobileMenu}>
+                      <Heart size={18} className="mobile-nav-icon"/> Wishlist
+                    </Link>
+                  </nav>
+                </div>
+
+                {user && (
+                  <div className="mobile-menu-group">
+                    <h4 className="mobile-menu-group-title">Account</h4>
+                    <nav className="mobile-nav-modern">
+                      <Link to="/profile" className="mobile-nav-link-modern" onClick={closeMobileMenu}>
+                        <User size={18} className="mobile-nav-icon"/> Profile
+                      </Link>
+                      <Link to="/my-orders" className="mobile-nav-link-modern" onClick={closeMobileMenu}>
+                        <Package size={18} className="mobile-nav-icon"/> My Orders
+                      </Link>
+
+                    </nav>
+                  </div>
+                )}
+
+                {user && (
+                  <div className="mobile-menu-group">
+                    <h4 className="mobile-menu-group-title">System</h4>
+                    <nav className="mobile-nav-modern">
+                      <button 
+                        className="mobile-nav-link-modern mobile-logout-btn" 
+                        onClick={() => { handleLogout(); closeMobileMenu(); }}
+                      >
+                        <LogOut size={18} className="mobile-nav-icon"/> Logout
+                      </button>
+                    </nav>
+                  </div>
+                )}
+              </div>
               <button
                 className="mobile-whatsapp-btn"
                 onClick={handleWhatsAppClick}

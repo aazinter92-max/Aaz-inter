@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { DollarSign, ShoppingBag, Package, Tags, ArrowUpRight, Calendar, Bell, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { DollarSign, ShoppingBag, Package, Tags, ArrowUpRight, Calendar, Bell, X, Plus, Clock, ArrowRight, Eye, CheckCircle, ShoppingCart } from 'lucide-react';
 import { useSocket } from '../../context/SocketContext';
 import { api } from '../../config/api';
 const Dashboard = () => {
   const { socket } = useSocket();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalSales: 0,
     totalOrders: 0,
@@ -12,11 +14,13 @@ const Dashboard = () => {
     totalCustomers: 0,
     analytics: []
   });
+  const [recentOrders, setRecentOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     fetchStats();
+    fetchRecentOrders();
 
     if (socket) {
       console.log('Admin Dashboard listener attached to Global Socket');
@@ -87,6 +91,27 @@ const Dashboard = () => {
     }
   };
 
+  const fetchRecentOrders = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await fetch(api('/api/orders?limit=5'), {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      if (response.ok) {
+        const data = await response.json();
+        setRecentOrders(Array.isArray(data) ? data.slice(0, 5) : []);
+      }
+    } catch (error) {
+      console.error('Error fetching recent orders:', error);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setLoading(true);
+    await Promise.all([fetchStats(), fetchRecentOrders()]);
+    setLoading(false);
+  };
+
   const statCards = [
     { 
       title: 'Total Revenue', 
@@ -153,9 +178,10 @@ const Dashboard = () => {
           </div>
           <button 
             onClick={() => setNotification(null)}
-            style={{ background: 'none', border: 'none', color: '#94a3b8', cursor: 'pointer', padding: '0.25rem' }}
+            className="mobile-close-btn"
+            style={{ width: '30px', height: '30px' }}
           >
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
       )}
@@ -167,11 +193,13 @@ const Dashboard = () => {
         </div>
         <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
           <button 
-            onClick={fetchStats}
-            className="admin-btn btn-secondary"
-            style={{ padding: '0.5rem 1rem', fontSize: '0.8rem' }}
+            onClick={handleRefresh}
+            className="admin-btn btn-primary"
+            style={{ padding: '0.625rem 1.25rem' }}
+            disabled={loading}
           >
-            Refresh Stats
+            {loading ? <Loader className="spinner" size={16} /> : <Clock size={16} />}
+            {loading ? 'Refreshing...' : 'Refresh Data'}
           </button>
           <div className="status-pill text-muted">
             <Calendar size={14} style={{ marginRight: '0.5rem' }} /> {new Date().toLocaleDateString()}
@@ -208,6 +236,73 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+      </div>
+
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginBottom: '3rem' }}>
+        {/* Quick Actions */}
+        <div className="table-container" style={{ padding: '1.5rem' }}>
+          <h3 className="section-title" style={{ marginBottom: '1.5rem', fontSize: '1rem' }}>Quick Actions</h3>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <button onClick={() => navigate('/admin/products/add')} className="quick-action-btn">
+              <Plus size={20} />
+              <span>Add Product</span>
+            </button>
+            <button onClick={() => navigate('/admin/orders')} className="quick-action-btn">
+              <Package size={20} />
+              <span>Manage Orders</span>
+            </button>
+            <button onClick={() => navigate('/admin/payment-verification')} className="quick-action-btn">
+              <CheckCircle size={20} />
+              <span>Verify Payments</span>
+            </button>
+            <button onClick={() => navigate('/admin/categories')} className="quick-action-btn">
+              <Tags size={20} />
+              <span>Categories</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Recent Store Activity */}
+        <div className="table-container" style={{ padding: '1.5rem' }}>
+          <div className="flex-between" style={{ marginBottom: '1.25rem' }}>
+            <h3 className="section-title" style={{ margin: 0, fontSize: '0.9rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Recent Activity</h3>
+            <Link to="/admin/orders" className="admin-btn btn-ghost" style={{ padding: '0.25rem 0.75rem', fontSize: '0.75rem' }}>
+              View All <ArrowRight size={14} style={{ marginLeft: '0.4rem' }} />
+            </Link>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            {recentOrders.length > 0 ? recentOrders.map((order) => (
+              <div key={order._id} style={{ 
+                display: 'flex', 
+                justifyContent: 'space-between', 
+                alignItems: 'center', 
+                padding: '0.875rem 1rem', 
+                background: 'var(--admin-bg)', 
+                borderRadius: 'var(--radius-md)',
+                border: '1px solid var(--admin-border)'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                  <div style={{ 
+                    background: order.paymentStatus === 'approved' ? '#dcfce7' : '#fffbeb', 
+                    color: order.paymentStatus === 'approved' ? '#15803d' : '#b45309', 
+                    padding: '0.625rem', 
+                    borderRadius: '10px' 
+                  }}>
+                    <ShoppingCart size={18} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--admin-text-main)' }}>{order.customerName}</div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--admin-text-sub)' }}>{new Date(order.createdAt).toLocaleDateString()}</div>
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.9rem', fontWeight: 800, color: 'var(--admin-primary)' }}>Rs. {order.totalAmount.toLocaleString()}</div>
+                  <Link to={`/admin/orders/${order._id}`} style={{ fontSize: '0.75rem', color: 'var(--admin-text-sub)', fontWeight: 600 }}>Invoice</Link>
+                </div>
+              </div>
+            )) : <p className="text-muted" style={{ fontSize: '0.85rem', textAlign: 'center', padding: '2rem' }}>No recent orders found.</p>}
+          </div>
+        </div>
       </div>
 
       {/* Sales Analytics Chart */}

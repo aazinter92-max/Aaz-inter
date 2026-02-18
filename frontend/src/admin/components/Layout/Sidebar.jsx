@@ -95,109 +95,85 @@ const Sidebar = ({ isOpen, onClose }) => {
     }
   };
 
-  const navItems = [
+  const menuGroups = [
     {
-      name: "Dashboard",
-      path: "/admin/dashboard",
-      icon: <LayoutDashboard size={20} />,
-    },
-    { name: "Products", path: "/admin/products", icon: <Package size={20} /> },
-    {
-      name: "Orders",
-      path: "/admin/orders",
-      icon: <ShoppingCart size={20} />,
-      badge: pendingOrders,
+      title: "Overview",
+      items: [
+        { name: "Dashboard", path: "/admin/dashboard", icon: <LayoutDashboard size={20} /> },
+      ]
     },
     {
-      name: "Payment Verification",
-      path: "/admin/payment-verification",
-      icon: <CheckCircle size={20} />,
-      badge: pendingPayments,
+      title: "Store Management",
+      items: [
+        { name: "Products", path: "/admin/products", icon: <Package size={20} /> },
+        { name: "Categories", path: "/admin/categories", icon: <Tags size={20} /> },
+        { name: "Customers", path: "/admin/customers", icon: <Users size={20} /> },
+      ]
     },
-    { name: "Categories", path: "/admin/categories", icon: <Tags size={20} /> },
-    { name: "Customers", path: "/admin/customers", icon: <Users size={20} /> },
-    { name: "Complaints", path: "/admin/complaints", icon: <MessageSquare size={20} />, badge: pendingComplaints },
+    {
+      title: "Operations",
+      items: [
+        { name: "Orders", path: "/admin/orders", icon: <ShoppingCart size={20} />, badge: pendingOrders },
+        { name: "Verify Payments", path: "/admin/payment-verification", icon: <CheckCircle size={20} />, badge: pendingPayments },
+        { name: "Complaints", path: "/admin/complaints", icon: <MessageSquare size={20} />, badge: pendingComplaints },
+      ]
+    }
   ];
 
   return (
     <aside className={`admin-sidebar ${isOpen ? 'mobile-open' : ''}`}>
       <div className="admin-sidebar-header">
         <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
-          <div
-            className="avatar-circle"
-            style={{
-              width: "40px",
-              height: "40px",
-              fontSize: "0.9rem",
-              marginRight: "0.75rem",
-            }}
-          >
-            AZ
-          </div>
-          <span>Admin Panel</span>
+          <div className="admin-logo-badge">AZ</div>
+          <span className="admin-panel-text">Admin Panel</span>
         </div>
-        <button
-          onClick={onClose}
-          style={{
-            display: 'none',
-            background: 'none',
-            border: 'none',
-            color: 'var(--admin-primary)',
-            cursor: 'pointer',
-            padding: '4px',
-          }}
-          className="mobile-close-btn"
-        >
+        <button onClick={onClose} className="mobile-close-btn">
           <X size={24} />
         </button>
       </div>
 
-      <div style={{ flex: 1, overflowY: "auto" }}>
+      <div style={{ flex: 1, overflowY: "auto", paddingBottom: '2rem' }}>
         <nav className="admin-nav">
-          <div
-            className="text-muted"
-            style={{
-              fontSize: "0.7rem",
-              textTransform: "uppercase",
-              letterSpacing: "1px",
-              padding: "0 1.5rem 0.5rem",
-              fontWeight: 700,
-            }}
-          >
-            Main Menu
-          </div>
-          {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              onClick={onClose}
-              className={`admin-nav-item ${isActive(item.path) ? "active" : ""}`}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span className="admin-nav-icon">{item.icon}</span>
-                <span>{item.name}</span>
+          {menuGroups.map((group, gIdx) => (
+            <div key={group.title} style={{ marginBottom: gIdx !== menuGroups.length - 1 ? '1.5rem' : 0 }}>
+              <div
+                className="text-muted"
+                style={{
+                  fontSize: "0.7rem",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                  padding: "0.5rem 1.5rem",
+                  fontWeight: 700,
+                  marginBottom: '0.5rem',
+                  opacity: 0.8
+                }}
+              >
+                {group.title}
               </div>
-              {item.badge > 0 && (
-                <span
+              {group.items.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={onClose}
+                  className={`admin-nav-item ${isActive(item.path) ? "active" : ""}`}
                   style={{
-                    background: "#ef4444",
-                    color: "white",
-                    fontSize: "0.7rem",
-                    padding: "2px 8px",
-                    borderRadius: "99px",
-                    fontWeight: 700,
-                    boxShadow: "0 2px 4px rgba(239, 68, 68, 0.3)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
                   }}
                 >
-                  {item.badge}
-                </span>
-              )}
-            </Link>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span className="admin-nav-icon">{item.icon}</span>
+                    <span style={{ fontSize: '0.9rem' }}>{item.name}</span>
+                  </div>
+                  {item.badge > 0 && (
+                    <span className="nav-badge-new">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
       </div>

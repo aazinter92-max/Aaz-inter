@@ -43,7 +43,7 @@ export const WishlistProvider = ({ children }) => {
     fetchWishlist();
   }, [fetchWishlist]);
 
-  const toggleWishlist = async (product) => {
+  const toggleWishlist = useCallback(async (product) => {
     if (!user || !user.token) return { success: false, message: 'Please login first' };
 
     const isItemInWishlist = wishlistItems.some(item => item.product._id === product._id);
@@ -69,9 +69,9 @@ export const WishlistProvider = ({ children }) => {
       console.error('Wishlist error:', err);
       return { success: false, message: 'Server error' };
     }
-  };
+  }, [user, wishlistItems, fetchWishlist]);
 
-  const removeFromWishlist = async (productId) => {
+  const removeFromWishlist = useCallback(async (productId) => {
     if (!user || !user.token) return;
 
     try {
@@ -87,7 +87,7 @@ export const WishlistProvider = ({ children }) => {
     } catch (err) {
       console.error('Failed to remove from wishlist:', err);
     }
-  };
+  }, [user]);
 
   const getWishlistCount = () => wishlistItems.length;
 

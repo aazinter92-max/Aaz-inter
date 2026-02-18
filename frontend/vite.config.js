@@ -6,11 +6,25 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
-          stripe: ['@stripe/react-stripe-js', '@stripe/stripe-js'],
-          socket: ['socket.io-client'],
-          icons: ['lucide-react']
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('@stripe')) {
+              return 'stripe';
+            }
+            if (id.includes('socket.io-client')) {
+              return 'socket';
+            }
+            if (id.includes('lucide-react')) {
+              return 'icons';
+            }
+            if (id.includes('react') || id.includes('react-dom') || id.includes('react-router-dom')) {
+              return 'vendor';
+            }
+          }
+          const isAdmin = id.includes('src/admin') || id.includes('src\\admin');
+          if (isAdmin) {
+            return 'admin';
+          }
         }
       }
     },

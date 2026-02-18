@@ -1,9 +1,10 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, Search, Package, Heart, TrendingUp, Award, ShoppingBag, CheckCircle, Globe, Shield, Wrench, Headphones, TruckIcon, ChevronDown, ShieldCheck, Stethoscope, Phone } from 'lucide-react';
+import { ArrowRight, Search, Package, Heart, TrendingUp, Award, ShoppingBag, CheckCircle, Globe, Shield, Wrench, Headphones, TruckIcon, ChevronDown, ShieldCheck, Stethoscope, Phone, FileDown, Activity } from 'lucide-react';
 import ProductCard from '../components/product/ProductCard';
 import Button from '../components/common/Button';
 import { api, cachedFetch } from '../config/api';
+import { generateProfessionalCatalog } from '../utils/catalogGenerator';
 import './Home.css';
 
 const Home = () => {
@@ -11,6 +12,7 @@ const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState({ _id: '', name: 'All Categories' });
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
@@ -19,14 +21,17 @@ const Home = () => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        // Fetch 8 latest products
-        const productRes = await fetch(api('/api/products?limit=8&sort=latest'));
-        const productData = await productRes.json();
-        setFeaturedProducts(Array.isArray(productData) ? productData : []);
+        const [productRes, categoryRes] = await Promise.all([
+          fetch(api('/api/products?limit=8&sort=latest')),
+          fetch(api('/api/categories'))
+        ]);
 
-        // Fetch Categories
-        const categoryRes = await fetch(api('/api/categories'));
-        const categoryData = await categoryRes.json();
+        const [productData, categoryData] = await Promise.all([
+          productRes.json(),
+          categoryRes.json()
+        ]);
+
+        setFeaturedProducts(Array.isArray(productData) ? productData : []);
         setCategories(Array.isArray(categoryData) ? categoryData : []);
       } catch (error) {
         console.error("Home data fetch error:", error);
@@ -51,19 +56,36 @@ const Home = () => {
     navigate(url);
   };
 
+  const handleDownloadCatalog = async () => {
+    try {
+      setIsDownloading(true);
+      // Fetch all products for a comprehensive catalog
+      const res = await fetch(api('/api/products?limit=100'));
+      const products = await res.json();
+      
+      if (Array.isArray(products)) {
+        await generateProfessionalCatalog(products);
+      } else {
+        alert("Failed to fetch product list for catalog.");
+      }
+    } catch (error) {
+      console.error("PDF Scan error:", error);
+      alert("Error generating catalog. Please try again later.");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   const featuredBoxes = useMemo(() => [
-    { color: 'blue', title: 'Clinical Furniture', subtitle: 'Hospital & Ward', discount: 'INSTITUTIONAL', icon: <Package size={40} /> },
-    { color: 'pink', title: 'Surgical Instruments', subtitle: 'OT & ER Grade', discount: 'CERTIFIED', icon: <Heart size={40} /> },
-    { color: 'green', title: 'Diagnostic Systems', subtitle: 'Advanced Imaging', discount: 'LATEST TECH', icon: <TrendingUp size={40} /> },
-    { color: 'yellow', title: 'Bulk Supplies', subtitle: 'Consumables', discount: 'WHOLESALE', icon: <Award size={40} /> },
+    { color: 'blue', title: 'Orthopedic Implants', subtitle: 'Prosthetics & Fixation', discount: '4 PRODUCTS', icon: <Activity size={40} />, image: 'https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&q=80&w=800' },
+    { color: 'pink', title: 'Surgical Instruments', subtitle: 'Precision OT Tools', discount: 'EU CERTIFIED', icon: <Heart size={40} />, image: 'https://images.unsplash.com/photo-1551076805-e1869033e561?auto=format&fit=crop&q=80&w=800' },
+    { color: 'green', title: 'Respiratory Care Equipment', subtitle: 'Ventilators & Oxygen', discount: 'CRITICAL CARE', icon: <TrendingUp size={40} />, image: 'https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&q=80&w=800' },
+    { color: 'yellow', title: 'Neurology Equipment', subtitle: 'Brain & Nerve Care', discount: 'DIAGNOSTIC', icon: <Activity size={40} />, image: 'https://images.unsplash.com/photo-1559757175-5700dde675bc?auto=format&fit=crop&q=80&w=800' },
+    { color: 'purple', title: 'Neonatal Equipment', subtitle: 'Infant Care Systems', discount: 'PREMIUM', icon: <ShoppingBag size={40} />, image: 'https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&q=80&w=800' },
+    { color: 'cyan', title: 'Patient Monitoring Equipment', subtitle: 'Vital Sign Systems', discount: '24/7 TRACKING', icon: <TrendingUp size={40} />, image: 'https://images.unsplash.com/photo-1516574187841-cb9cc2ca948b?auto=format&fit=crop&q=80&w=800' },
   ], []);
 
-  const whyChooseUs = useMemo(() => [
-    { icon: <CheckCircle size={36} />, title: 'Quality & Compliance', description: 'All products meet international medical standards and certifications' },
-    { icon: <Globe size={36} />, title: 'Worldwide Import / Export', description: 'Seamless logistics and delivery to medical facilities globally' },
-    { icon: <Shield size={36} />, title: 'Trusted Suppliers', description: 'Partnered with world-renowned medical equipment manufacturers' },
-    { icon: <Wrench size={36} />, title: 'Maintenance & Repair Services', description: 'On-site support and comprehensive after-sales services' }
-  ], []);
+
 
   const services = useMemo(() => [
     { icon: <Package size={32} />, title: 'Medical Equipment Supply', description: 'Complete range of hospital and surgical equipment for all departments' },
@@ -78,6 +100,19 @@ const Home = () => {
     { name: 'Dr. Bilal Khan', role: 'Head of Department, Orthopedics', text: "The orthopedic implants from AAZ meet all international standards. My team is very satisfied with the precision." },
     { name: 'Ayesha Malik', role: 'Clinic Administrator, Care Trust', text: "Excellent customer service and prompt delivery. AAZ is our go-to partner for all medical equipment needs." }
   ], []);
+
+  const handleDeptClick = (deptTitle) => {
+    const category = categories.find(cat => 
+      cat.name.toLowerCase().includes(deptTitle.toLowerCase()) || 
+      deptTitle.toLowerCase().includes(cat.name.toLowerCase())
+    );
+    
+    if (category) {
+      navigate(`/products?category=${category._id}`);
+    } else {
+      navigate(`/products?search=${deptTitle}`);
+    }
+  };
 
   if (loading) return <div className="text-center py-20">Loading...</div>;
 
@@ -108,6 +143,96 @@ const Home = () => {
                 AAZ International provides clinical-grade instruments, hospital furniture,
                 and advanced diagnostic systems to healthcare institutions worldwide.
               </p>
+              <div className="hero-actions-container">
+                <Button 
+                  variant="primary" 
+                  size="large" 
+                  onClick={() => navigate('/products')}
+                  className="hero-cta-btn"
+                >
+                  Explore Catalog
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="large" 
+                  icon={<FileDown size={20} />}
+                  onClick={handleDownloadCatalog}
+                  loading={isDownloading}
+                  className="hero-download-btn"
+                >
+                  Download Catalog
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Institutional Departments Grid */}
+      <section className="dept-grid-section">
+        <div className="container">
+          <div className="section-header-clean">
+            <h2 className="section-title-enterprise">Institutional Departments</h2>
+            <p className="section-desc-enterprise">Specialized equipment solutions tailored for clinical environments</p>
+          </div>
+          <div className="dept-modern-grid">
+            {featuredBoxes.map((dept, index) => (
+              <div 
+                key={index} 
+                className="dept-card-new" 
+                onClick={() => handleDeptClick(dept.title)}
+              >
+                <div className="dept-image-box">
+                  <img src={dept.image} alt={dept.title} loading="lazy" />
+                  <div className="dept-overlay"></div>
+                  <div className="dept-badge">{dept.discount}</div>
+                </div>
+                <div className="dept-info-new">
+                  <div className="dept-icon-mini">{dept.icon}</div>
+                  <h3>{dept.title}</h3>
+                  <p>{dept.subtitle}</p>
+                  <span className="dept-explore-link">Browse Specialists <ArrowRight size={14} /></span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Trust & Stats Bar - Professional B2B Strip */}
+      <section className="trust-stats-bar">
+        <div className="container">
+          <div className="stats-inner-container">
+            <div className="stat-unit">
+              <ShieldCheck size={28} className="stat-icon-blue" />
+              <div className="stat-text">
+                <span className="stat-title">ISO Certified</span>
+                <span className="stat-subtitle">Quality Standards</span>
+              </div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-unit">
+              <Globe size={28} className="stat-icon-blue" />
+              <div className="stat-text">
+                <span className="stat-title">15+ Countries</span>
+                <span className="stat-subtitle">Global Presence</span>
+              </div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat-unit">
+              <Award size={28} className="stat-icon-blue" />
+              <div className="stat-text">
+                <span className="stat-title">500+ Clients</span>
+                <span className="stat-subtitle">Healthcare Partners</span>
+              </div>
+            </div>
+            <div className="stat-divider desktop-only"></div>
+            <div className="stat-unit desktop-only">
+              <CheckCircle size={28} className="stat-icon-blue" />
+              <div className="stat-text">
+                <span className="stat-title">CE Marked</span>
+                <span className="stat-subtitle">Surgical Precision</span>
+              </div>
             </div>
           </div>
         </div>
@@ -122,41 +247,28 @@ const Home = () => {
                 <h2 className="category-section-title">Professional Medical Equipment Catalog</h2>
                 <p className="text-muted">High-precision instruments from certified global manufacturers</p>
               </div>
-              <Button 
-                variant="outline" 
-                icon={<ArrowRight size={18} />} 
-                onClick={() => navigate('/products')}
-              >
-                View Full Catalog
-              </Button>
             </div>
             <div className="category-products-grid">
               {featuredProducts.map((product) => (
                 <ProductCard key={product._id} product={product} />
               ))}
             </div>
+            <div className="mobile-only section-footer-btn">
+              <Button 
+                variant="outline" 
+                icon={<ArrowRight size={18} />} 
+                onClick={() => navigate('/products')}
+                fullWidth
+              >
+                Show All Products
+              </Button>
+            </div>
           </div>
         </section>
       )}
 
 
-      <section className="why-choose-section">
-        <div className="container">
-          <div className="section-header-clean">
-            <h2>Why Institutional Clients Choose Us</h2>
-            <p>Your trusted global partner in clinical equipment supply and technical support</p>
-          </div>
-          <div className="why-choose-grid">
-            {whyChooseUs.map((item, index) => (
-              <div key={index} className="why-choose-card">
-                <div className="why-choose-icon">{item.icon}</div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       <section className="services-section">
         <div className="container">
@@ -219,7 +331,7 @@ const Home = () => {
             <p>Our team is ready to assist you with your medical equipment needs</p>
             <div className="cta-actions-modern">
               <Button variant="primary" onClick={() => navigate('/contact')}>Contact Us</Button>
-              <Button variant="secondary" onClick={() => navigate('/products')}>View Products</Button>
+              <Button variant="secondary" onClick={() => navigate('/products')}>View Categories</Button>
             </div>
           </div>
         </div>

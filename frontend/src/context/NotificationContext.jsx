@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import Notification from '../components/common/Notification';
 import '../components/common/Notification.css';
 
@@ -51,14 +51,16 @@ export const NotificationProvider = ({ children }) => {
     setNotifications(prev => prev.filter(n => n.id !== id));
   }, []);
 
+  const value = useMemo(() => ({ 
+    showNotification, 
+    history, 
+    unreadCount: history.filter(n => !n.read).length,
+    markAsRead,
+    clearHistory 
+  }), [showNotification, history, markAsRead, clearHistory]);
+
   return (
-    <NotificationContext.Provider value={{ 
-      showNotification, 
-      history, 
-      unreadCount: history.filter(n => !n.read).length,
-      markAsRead,
-      clearHistory 
-    }}>
+    <NotificationContext.Provider value={value}>
       {children}
       <div className="notification-container">
         {notifications.map(n => (

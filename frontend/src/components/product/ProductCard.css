@@ -33,11 +33,16 @@
   overflow: hidden;
 }
 
-.product-card-image img {
+.product-card-image .lazy-image-container {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.product-card-image .lazy-image-container img {
   width: 100%;
   height: 100%;
   object-fit: contain; /* Changed to contain for medical gear */
@@ -45,8 +50,8 @@
   transition: transform 0.3s ease;
 }
 
-.product-card:hover .product-card-image img {
-  transform: translate(-50%, -50%) scale(1.04);
+.product-card:hover .product-card-image .lazy-image-container img {
+  transform: scale(1.04);
 }
 
 /* Stock Badge */
@@ -177,6 +182,23 @@
   height: 32px;
   padding: 6px 8px;
   border-radius: 6px;
+}
+
+.bulk-inquiry-btn {
+  width: 100% !important;
+  margin-top: 8px !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #0369a1 !important;
+  text-decoration: underline !important;
+  padding: 4px 0 !important;
+  min-height: auto !important;
+  text-transform: none !important;
+}
+
+.bulk-inquiry-btn:hover {
+  color: var(--color-primary) !important;
+  background-color: transparent !important;
 }
 
 /* Responsive */

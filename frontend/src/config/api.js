@@ -20,20 +20,24 @@ export const API_URL = API_BASE_URL;
 const cache = new Map();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
+// Pending requests map for deduplcation
+const pendingRequests = new Map();
+
 export const api = (path) => {
   const cleanPath = path.startsWith("/") ? path : `/${path}`;
   return `${API_BASE_URL}${cleanPath}`;
 };
 
-// Cached fetch for GET requests
+// Cached fetch for GET requests with deduplication
 export const cachedFetch = async (url, options = {}) => {
   const method = options.method || 'GET';
   
-  // Only cache GET requests
+  // Only cache and deduplicate GET requests
   if (method !== 'GET') {
     return fetch(url, options);
   }
   
+  // Check cache first
   const cached = cache.get(url);
   if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
     return Promise.resolve({
@@ -42,13 +46,28 @@ export const cachedFetch = async (url, options = {}) => {
       clone: () => ({ json: async () => cached.data })
     });
   }
-  
-  const response = await fetch(url, options);
-  if (response.ok) {
-    const data = await response.clone().json();
-    cache.set(url, { data, timestamp: Date.now() });
+
+  // Check generic pending requests
+  if (pendingRequests.has(url)) {
+    return pendingRequests.get(url).then(startResponse => startResponse.clone());
   }
-  return response;
+
+  // Create new request promise
+  const requestPromise = fetch(url, options)
+    .then(async (response) => {
+      if (response.ok) {
+        const data = await response.clone().json();
+        cache.set(url, { data, timestamp: Date.now() });
+      }
+      return response;
+    })
+    .finally(() => {
+      pendingRequests.delete(url);
+    });
+
+  pendingRequests.set(url, requestPromise);
+  
+  return requestPromise;
 };
 
 // Clear cache (useful after mutations)

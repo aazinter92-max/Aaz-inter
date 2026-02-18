@@ -12,7 +12,8 @@ import {
   ChevronRight,
   Heart,
   Share2,
-  Send
+  Send,
+  Users
 } from 'lucide-react';
 import { formatPrice } from '../data/products';
 import { useCart } from '../context/CartContext';
@@ -314,6 +315,22 @@ const ProductDetail = () => {
               >
                 Inquire on WhatsApp
               </Button>
+
+              {/* Bulk Order Special Section */}
+              <div className="bulk-order-card">
+                <div className="bulk-icon"><Users size={20} /></div>
+                <div className="bulk-info">
+                  <h4>Bulk Order Inquiry</h4>
+                  <p>Ordering for a hospital or clinic? Get wholesale pricing.</p>
+                  <Button 
+                    variant="link" 
+                    size="small" 
+                    onClick={() => navigate(`/contact?product=${product._id}&type=bulk`)}
+                  >
+                    Request Bulk Quote →
+                  </Button>
+                </div>
+              </div>
             </div>
 
             {/* Trust Badges */}
